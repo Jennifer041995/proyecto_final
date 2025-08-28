@@ -1,0 +1,30 @@
+<div class="player-logo" style="text-align:center; margin-bottom:20px;"></div>
+  <img src="https://cdn-icons-png.freepik.com/512/10072/10072477.png" alt="Player Logo" style="width:80px; height:80px;">
+</div>
+<!-- ...otros controles del reproductor... -->  
+
+<div class="player">
+    <h2>{{currentTrack.title}}</h2>
+    <audio #audioPlayer controls (ended)="nextTrack()">
+        <track kind="captions" src="{{currentTrack.captions}}" srclang="es" label="Español">
+        <source src="{{currentTrack.url}}" type="audio/mpeg">
+    </audio>
+</div>
+<div class="player-info">
+    <div class="track-title">Título de la Canción</div>
+    <div class="image">artista</div>
+    <div class="artist-name">Nombre del Artista</div>
+    <div class="album-name">Nombre del Álbum</div>
+    <div class="current-time">00:00</div>
+    <div class="volume-control">
+        <button (click)="increaseVolume()">Volumen +</button>
+        <button (click)="decreaseVolume(0.1)">Volumen -</button>
+    </div>
+</div>
+<div class="player-controls">
+    <button (click)="play()">Play</button>
+    <button (click)="pause()">Pause</button>
+    <button (click)="stop()">Stop</button>  
+    <button (click)="next()">Next</button>
+    <button (click)="previous()">Previous</button>
+</div>

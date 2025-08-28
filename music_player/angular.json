@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "proyecto": {
+    "music_player": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -14,6 +14,9 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -58,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "proyecto:build:production"
+              "buildTarget": "music_player:build:production"
             },
             "development": {
-              "buildTarget": "proyecto:build:development"
+              "buildTarget": "music_player:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -72,6 +75,10 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               {
@@ -88,6 +95,6 @@
     }
   },
   "cli": {
-    "analytics": "fa99d312-c82a-4ea6-a4ff-33be217165d3"
+    "analytics": "56eeaeea-22a3-4946-99a5-13f38e95c92a"
   }
 }
