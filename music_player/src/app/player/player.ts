@@ -4,24 +4,51 @@ import { Component } from '@angular/core';
   selector: 'app-player',
   imports: [],
   templateUrl: './player.component.html',
-  styleUrls: ['./player.component.css']
+  // styleUrls: ['./player.component.css']
 })
 export class PlayerComponent {
-pause() {
-throw new Error('Method not implemented.');
-}
-
-    decreaseVolume(volume: number) {
-    const audioPlayer: HTMLAudioElement | null = document.querySelector('audio');
-    if (audioPlayer) {
-      audioPlayer.volume = Math.max(0, Math.min(1, volume));
-    }
-  }
   play() {
     const audioPlayer: HTMLAudioElement | null = document.querySelector('audio');
     if (audioPlayer) {
       audioPlayer.play();
     }
+  }
+
+  pause() {
+    const audioPlayer: HTMLAudioElement | null = document.querySelector('audio');
+    if (audioPlayer) {
+      audioPlayer.pause();
+    }
+  }
+
+  stop() {
+    const audioPlayer: HTMLAudioElement | null = document.querySelector('audio');
+    if (audioPlayer) {
+      audioPlayer.pause();
+      audioPlayer.currentTime = 0;
+    }
+  }
+
+  increaseVolume() {
+    const audioPlayer: HTMLAudioElement | null = document.querySelector('audio');
+    if (audioPlayer && audioPlayer.volume < 1) {
+      audioPlayer.volume = Math.min(1, audioPlayer.volume + 0.1);
+    }
+  }
+
+  decreaseVolume() {
+    const audioPlayer: HTMLAudioElement | null = document.querySelector('audio');
+    if (audioPlayer && audioPlayer.volume > 0) {
+      audioPlayer.volume = Math.max(0, audioPlayer.volume - 0.1);
+    }
+  }
+
+  next() {
+    this.nextTrack();
+  }
+
+  previous() {
+    this.prevTrack();
   }
 
   tracks = [
