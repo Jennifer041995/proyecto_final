@@ -1,19 +1,34 @@
 import { Component } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-player',
-  imports: [],
+  standalone: true,
+  imports: [MatFormFieldModule, MatInputModule, MatIconModule],
   templateUrl: './player.component.html',
   // styleUrls: ['./player.component.css']
 })
 export class PlayerComponent {
+  isLooping = false;
   play() {
     const audioPlayer: HTMLAudioElement | null = document.querySelector('audio');
     if (audioPlayer) {
+      audioPlayer.loop = this.isLooping;
       audioPlayer.play();
     }
   }
 
+  // Removed erroneous nested class 'AudioComponent'
+
+  toggleLoop() {
+    this.isLooping = !this.isLooping;
+    const audioPlayer: HTMLAudioElement | null = document.querySelector('audio');
+    if (audioPlayer) {
+      audioPlayer.loop = this.isLooping;
+    }
+  }
   pause() {
     const audioPlayer: HTMLAudioElement | null = document.querySelector('audio');
     if (audioPlayer) {
@@ -53,20 +68,55 @@ export class PlayerComponent {
 
   tracks = [
     {
-      title: 'Canción 1',
-      artist: 'Artista 1',
-      album: 'Álbum 1',
-      url: 'ruta/a/cancion1.mp3',
-      captions: 'ruta/a/cancion1.vtt'
+      title: 'Mandisa - Overcomer',
+      artist: 'Mandisa',
+      album: 'english',
+      url: 'assets/music/Mandisa/Overcomer.mp3',
+      captions: ''
     },
     {
-      title: 'Canción 2',
-      artist: 'Artista 2',
-      album: 'Álbum 2',
-      url: 'ruta/a/cancion2.mp3',
-      captions: 'ruta/a/cancion2.vtt'
+      title: 'Mandisa - Stronger',
+      artist: 'Mandisa',
+      album: 'english',
+      url: 'assets/music/Mandisa/Stronger.mp3',
+      captions: ''
+    },
+    {
+      title: 'Francesca Battistelli - He Knows My Name',
+      artist: 'Francesca Battistelli',
+      album: 'english',
+      url: 'assets/music/FrancescaBattistelli/HeKnowsMyName.mp3',
+      captions: ''
+    },
+    {
+      title: 'TobyMac - Feel It',
+      artist: 'TobyMac',
+      album: 'This Is Not A Test',
+      url: 'assets/music/TobyMac/FeelIt.mp3',
+      captions: ''
+    },
+    {
+      title: 'Luis Miguel - La Incondicional',
+      artist: 'Luis Miguel',
+      album: 'Busca Una Mujer',
+      url: 'assets/music/LuisMiguel/LaIncondicional.mp3',
+      captions: ''
     }
   ];
+
+  videoTracks = [
+    {
+      title: 'TobyMac - Light Shine Bright',
+      url: 'assets/videos/video1.mp4',
+      captions: 'assets/videos/video1.vtt'
+    },
+    {
+      title: 'TobyMac - Feel It',
+      url: 'assets/videos/video2.mp4',
+      captions: 'assets/videos/video2.vtt'
+    }
+  ];
+
   currentTrackIndex = 0;
 
   get currentTrack() {

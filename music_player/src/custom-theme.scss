@@ -1,0 +1,18 @@
+@use '@angular/material' as mat;
+
+// Aplica al tema Material 3 usando los palettes predefinidos
+html {
+  @include mat.m3-theme(
+    $primary: mat.$m3-blue-palette,
+    $surface: mat.$m3-grey-palette,
+    $error: mat.$m3-red-palette
+  );
+}
+
+body {
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+}
