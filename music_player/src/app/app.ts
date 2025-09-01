@@ -10,3 +10,4 @@ import { PlayerComponent } from './player/player';
 export class App {
   protected readonly title = signal('music_player');
 }
+

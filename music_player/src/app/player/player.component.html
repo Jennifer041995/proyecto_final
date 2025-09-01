@@ -2,34 +2,68 @@
 
 <div class="main">
   <div class="vertical-content">
+
     <mat-form-field appearance="outline" class="search-bar">
       <mat-label>Buscar canción</mat-label>
-      <input #str matInput placeholder="Buscar canción">
+      <input #str matInput placeholder="Escribe el nombre de la canción" (input)="filterTracks(str.value)">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
+    <div class="song-list">
+      <h3>Lista de canciones</h3>
+      <ul>
+  <li *ngFor="let track of filteredTracks; let i = index" [class.active]="i === currentTrackIndex" (click)="selectTrack(i)">
+          <strong>{{ track.title }}</strong> <span>- {{ track.artist }}</span> <span>({{ track.album }})</span>
+        </li>
+      </ul>
+    </div>
+
+<app-track-list
+  [tracks]="tracks"
+  [currentTrackIndex]="currentTrackIndex"
+  (trackSelected)="selectTrack($event)">
+</app-track-list>
+
     <div class="player">
-      <h2>{{currentTrack.title}}</h2>
-      <audio #audioPlayer controls (ended)="nextTrack()">
+      <div class="album-art">
+        <img [src]="currentTrack.cover || 'assets/music/default-cover.png'" alt="Carátula" />
+        <div class="playing-indicator">
+          <span class="bar" *ngFor="let b of [1,2,3,4]"></span>
+        </div>
+      </div>
+      <div class="track-info">
+        <h2>{{currentTrack.title}}</h2>
+        <div class="artist-name">{{currentTrack.artist}}</div>
+        <div class="album-name">{{currentTrack.album}}</div>
+      </div>
+      <audio #audioPlayer (timeupdate)="updateProgress($event)" (ended)="nextTrack()">
         <track kind="captions" [src]="currentTrack.captions" srclang="es" label="Español">
         <source [src]="currentTrack.url" type="audio/mpeg">
       </audio>
-      <div class="track-title">{{currentTrack.title}}</div>
-      <div class="artist-name">{{currentTrack.artist}}</div>
-      <div class="album-name">{{currentTrack.album}}</div>
+      <div class="progress-container">
+        <span>{{ currentTime | date:'mm:ss' }}</span>
+        <input type="range" min="0" [max]="duration" [value]="currentTime" (input)="seekAudio($event)">
+        <span>{{ duration | date:'mm:ss' }}</span>
+      </div>
+
       <div class="player-controls">
-        <button (click)="stop()">Detener</button>
-        <button (click)="next()">Siguiente</button>
-        <button (click)="previous()">Anterior</button>
-        <button (click)="toggleLoop()">Repetir {{ isLooping ? '🔁' : '⏹️' }}</button>
+        <button (click)="previous()" aria-label="Canción anterior">⏮️</button>
+        <button (click)="togglePlay()" aria-label="Reproducir o pausar">{{ isPlaying ? '⏸️' : '▶️' }}</button>
+        <button (click)="stop()" aria-label="Detener reproducción">⏹️</button>
+        <button (click)="next()" aria-label="Siguiente canción">⏭️</button>
+        <button (click)="toggleLoop()" aria-label="Activar o desactivar repetición">🔁</button>
+        <button (click)="toggleShuffle()" aria-label="Activar o desactivar aleatorio">🔀</button>
+      </div>
+      <div class="volume-control">
+        <label>Volumen</label>
+        <input type="range" min="0" max="1" step="0.01" (input)="setVolume($event)">
       </div>
     </div>
 
     <div class="video-player">
       <h2>Video</h2>
       <video width="320" height="240" controls>
-        <source src="assets/videos/tu_video.mp4" type="video/mp4">
-        Tu navegador no soporta el elemento de video.
+        <source src="assets/videos/video1.mp4" type="video/mp4">
       </video>
     </div>
   </div>
