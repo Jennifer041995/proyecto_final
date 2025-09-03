@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 //import {MediaService} from './services/media.service';
-import { MediaFile } from '../models/models';
+import { MediaFile } from '../models/media.model';
 
 @Injectable({
+  // Registra automaticamente el servicio en el inyector principal de la aplicacion, instancia unica y accesible para toda la app
   providedIn: 'root'
 })
+// media service gestiona datos multimedia compartidos entre componentes
 export class MediaService {
   private mediaList: MediaFile[] = [];
   private currentMedia: MediaFile | null = null;

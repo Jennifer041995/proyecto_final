@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { OnInit } from "@angular/core";
-import { MediaFile } from "../models/models";
+import { MediaFile } from "../models/media.model";
 import { MediaService } from '../../services/media.service';
 
 @Component({
@@ -35,6 +35,4 @@ export class PlayerComponent implements OnInit {
   isVideo(): boolean {
     return this.media?.type === "video";
   }
-
- 
 }
