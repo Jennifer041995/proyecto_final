@@ -2,3 +2,18 @@
   <video *ngIf="isVideo()" [src]="media?.url" controls></video>
   <audio *ngIf="isAudio()" [src]="media?.url" controls></audio>
 </div>
+
+<div class="mini-player" *ngIf="media">
+  <img [src]="media?.cover" ´assets/imagenes/default-cover.jpg´ alt="Portada" class="cover">
+</div>
+
+<div class="info">
+<h4>{{ media?.name }}</h4>
+<small>{{ media?.type === 'audio' ? 'Audio' : 'Video' }}</small>
+</div>
+<div class="controls">
+  <button (click)="togglePlay()">
+    <span *ngIf="!isPlaying">Play</span>
+    <span *ngIf="isPlaying">Pause</span>
+  </button>
+</div>

@@ -8,9 +8,3 @@ export interface MediaFile {
   duracion?: number;
   cover?: string;
 }
-
-@NgModule({
-  providers: [MediaService]
-  // ...
-})
-export class MediaService {}

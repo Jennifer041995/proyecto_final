@@ -55,3 +55,50 @@ button {
 button:hover {
   background: #1565c0;
 }
+
+.mini-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1e1e1e;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.4);
+  z-index: 1000;
+}
+
+.cover {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.info h4 {
+  margin: 0;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info small {
+  color: #aaa;
+}
+
+.controls button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
