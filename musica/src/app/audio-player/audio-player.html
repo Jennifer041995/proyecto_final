@@ -1,0 +1,50 @@
+<div class="audio-player">
+  <div class="song-info">
+    <h3>{{ currentSong?.title }}</h3>
+    <p>{{ currentSong?.artist }}</p>
+  </div>
+
+  <div class="controls">
+    <button (click)="previous()">⏮ Anterior</button>
+    <button (click)="playPause()">
+      {{ isPlaying ? '⏸ Pausa' : '▶ Reproducir' }}
+    </button>
+    <button (click)="next()">Siguiente ⏭</button>
+  </div>
+
+  <div class="progress-container">
+    <span>{{ formatTime(currentTime) }}</span>
+    <input
+      type="range"
+      class="progress-slider"
+      max="100"
+      min="0"
+      step="0.1"
+      [value]="progress"
+      (input)="seek($event)">
+    <span>{{ formatTime(duration) }}</span>
+  </div>
+
+  <div class="volume-control">
+    <label>Volumen:</label>
+    <input
+      type="range"
+      max="1"
+      min="0"
+      step="0.1"
+      [value]="volume"
+      (input)="setVolume($event)">
+  </div>
+
+  <div class="playlist">
+    <h4>Biblioteca de canciones</h4>
+    <ul>
+      <li 
+        *ngFor="let song of songs; let i = index" 
+        (click)="changeSong(i)"
+        [class.active]="i === currentSongIndex">
+        {{ song.title }} - {{ song.artist }}
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,8 +1,0 @@
-/* Alinear el bloque de viñetas a la derecha */
-.right-side {
-	display: flex;
-	justify-content: flex-end;
-}
-.pill-group {
-	align-items: flex-end;
-}
