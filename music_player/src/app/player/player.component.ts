@@ -9,7 +9,7 @@ import { NgModule } from '@angular/core';
   styleUrls: ['./player.component.css']
 })
 export class PlayerComponent implements OnInit {
-  media: MediaFile | null = null;
+  media: MediaFile | null = null;6
 
   constructor(private mediaService: MediaService) {}
 
