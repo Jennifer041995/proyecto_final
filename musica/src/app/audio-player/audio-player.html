@@ -1,13 +1,17 @@
 <div class="audio-player">
   <div class="song-info">
-    <h3>{{ currentSong?.title }}</h3>
-    <p>{{ currentSong?.artist }}</p>
-  </div>
+</div>
 
-  <div class="file-upload">
+<div class="file-upload" [align]="'right'">
   <label class="upload-btn">
     <input type="file" (change)="loadLocalFile($event)" accept=".mp3" />
   </label>
+</div> <br><br>
+
+<div class="current-song">
+  <img [src]="currentSong.image" alt="Portada de {{ currentSong.title }}" class="cover" />
+  <h2>{{ currentSong.title }}</h2>
+  <h3>{{ currentSong.artist }}</h3>
 </div>
 
   <div class="controls">
@@ -27,7 +31,7 @@
       min="0"
       step="0.1"
       [value]="progress"
-      (input)="seek($event)">
+      (input)="seek($event)"> 
     <span>{{ formatTime(duration) }}</span>
   </div>
 

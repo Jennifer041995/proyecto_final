@@ -28,7 +28,13 @@ export class AudioPlayerComponent implements OnInit{
       url: 'assets/ingles/MandisaBleedTheSameftTobyMacKirkFranklin.mp3'
     },
     { 
-      image: 'assets/imagenes/mandisa.jpg',
+      image: 'assets/imagenes/Francesca.jpg',
+      title: 'HeKnowsMyName', 
+      artist: 'Francesca Battistelli', 
+      url: 'assets/ingles/FrancescaBattistelliHeKnowsMyName.mp3' 
+    },
+    { 
+      image: 'assets/imagenes/Francesca.jpg',
       title: 'Overcomer', 
       artist: 'Mandisa', 
       url: 'assets/ingles/Mandisa-Overcomer.mp3' 
