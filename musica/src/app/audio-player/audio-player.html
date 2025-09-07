@@ -4,6 +4,12 @@
     <p>{{ currentSong?.artist }}</p>
   </div>
 
+  <div class="file-upload">
+  <label class="upload-btn">
+    <input type="file" (change)="loadLocalFile($event)" accept=".mp3" />
+  </label>
+</div>
+
   <div class="controls">
     <button (click)="previous()">⏮ Anterior</button>
     <button (click)="playPause()">
@@ -48,3 +54,14 @@
     </ul>
   </div>
 </div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<youtube-player
+  videoId="TfiYWaeAcRw"
+  [height]="300"
+  [width]="500"
+  suggestedQuality="highres">
+</youtube-player>
+
+

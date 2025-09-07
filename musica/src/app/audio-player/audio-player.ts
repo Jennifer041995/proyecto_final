@@ -2,15 +2,18 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
+import { YouTubePlayerModule } from '@angular/youtube-player';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-audio-player',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, YouTubePlayerModule],
   templateUrl: './audio-player.html',
   styleUrls: ['./audio-player.css']
 })
-export class AudioPlayerComponent implements OnInit {
+export class AudioPlayerComponent implements OnInit{
   audio: HTMLAudioElement | null = null;
   currentSongIndex: number = 0;
   isPlaying: boolean = false;
@@ -19,16 +22,36 @@ export class AudioPlayerComponent implements OnInit {
   
   songs: any[] = [
     { 
-      title: 'Canción 1', 
-      artist: 'Artista 1', 
-      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+      image: 'assets/imagenes/mandisa.jpg',
+      title: 'BleedTheSame', 
+      artist: 'Mandisa ft. TobyMac, Kirk Franklin', 
+      url: 'assets/ingles/MandisaBleedTheSameftTobyMacKirkFranklin.mp3'
     },
     { 
-      title: 'Canción 2', 
-      artist: 'Artista 2', 
-      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' 
+      image: 'assets/imagenes/mandisa.jpg',
+      title: 'Overcomer', 
+      artist: 'Mandisa', 
+      url: 'assets/ingles/Mandisa-Overcomer.mp3' 
     },
   ];
+
+  loadLocalFile(event: any): void {
+  const file = event.target.files[0];
+  if (file && this.audio) {
+    const objectUrl = URL.createObjectURL(file);
+    this.audio.src = objectUrl;
+    this.audio.load();
+    this.audio.play();
+    this.isPlaying = true;
+
+    this.songs.push({
+      title: file.name,
+      artist: 'Local',
+      url: objectUrl
+    });
+    this.currentSongIndex = this.songs.length - 1;
+  }
+}
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -124,4 +147,25 @@ export class AudioPlayerComponent implements OnInit {
   get duration(): number {
     return this.audio ? this.audio.duration : 0;
   }
+
+  get isAudioReady(): boolean {
+    return this.audio !== null;
+  }
+
+  get isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
+
+  get isMobile(): boolean {
+    return isPlatformBrowser(this.platformId) && window.innerWidth < 768;
+  }
+
+
 }
+
+// Módulo de declaración que incluye YoutubePlayerModule
+@NgModule({
+  imports: [YouTubePlayerModule]
+})
+export class AppModule {}
+
