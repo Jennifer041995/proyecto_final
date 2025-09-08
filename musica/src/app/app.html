@@ -1,80 +1,8 @@
 <br><main>
   <h1 [align]="'center'">Productor de Música</h1>
-  <app-audio-player></app-audio-player>
 </main>
 
 <router-outlet></router-outlet>
-
-<style>
-  main {
-    padding: 1rem;
-    max-width: 800px;
-    margin: 0 auto;
-  } 
-  h1 {
-    font-family: 'Montserrat', sans-serif;
-    color: #0b0a0a;
-  }
-</style>
-
-<style>
-  .controls {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  button {
-    font-size: 1.5rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  input[type="range"] {
-    flex-grow: 1;
-  }
-
-  .time {
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: #555;
-  }
-  .audio-player {
-    text-align: center;
-    font-family: 'Arial', sans-serif;
-    color: #333;
-  }
-  h2 {
-    margin: 0.5rem 0 0.2rem 0;
-  }
-  h3 {
-    margin: 0;
-    font-weight: normal;
-    color: #666;
-  } 
-  audio {
-    width: 100%;
-    margin-top: 1rem;
-  }
-</style>
-
-<style>
-  .playlist {
-    margin-top: 1rem;
-  }
-  .playlist-item {
-    padding: 0.5rem;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-  }
-  .playlist-item:hover {
-    background-color: #f9f9f9;
-  }
-  .playlist-item.active {
-    background-color: #e0e0e0;
-    font-weight: bold;
-  }
-</style>
-
 
 <style>
   .video-container {
@@ -84,7 +12,7 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
-    background-color: #000;
+    background-color: #080808;
   }
   video {
     width: 100%;

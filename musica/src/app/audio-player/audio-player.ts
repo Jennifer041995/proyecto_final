@@ -122,6 +122,7 @@ export class AudioPlayerComponent implements OnInit{
         console.error('Error al reproducir:', error);
       });
     }
+    this.progress = 0;
   }
 
   seek(event: any): void {
@@ -178,4 +179,5 @@ export class AudioPlayerComponent implements OnInit{
   imports: [YouTubePlayerModule]
 })
 export class AppModule {}
+
 
