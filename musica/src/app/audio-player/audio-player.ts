@@ -19,7 +19,10 @@ export class AudioPlayerComponent implements OnInit{
   isPlaying: boolean = false;
   progress: number = 0;
   volume: number = 1;
-  
+  //currentTime: number = 0; //tiempo actual en segundos
+ // duration: number = 0; //duración total en segundos
+  interval: any;
+
   songs: any[] = [
     { 
       image: 'assets/imagenes/mandisa.jpg',
@@ -51,6 +54,7 @@ export class AudioPlayerComponent implements OnInit{
     this.isPlaying = true;
 
     this.songs.push({
+      imagen: "",
       title: file.name,
       artist: 'Local',
       url: objectUrl
