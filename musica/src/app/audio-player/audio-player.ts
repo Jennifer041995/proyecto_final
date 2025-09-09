@@ -44,6 +44,8 @@ export class AudioPlayerComponent implements OnInit{
     },
   ];
 
+  //this.progress=(this.audio.currentTime/this.audio.duration)*100 || 0;
+
   loadLocalFile(event: any): void {
   const file = event.target.files[0];
   if (file && this.audio) {

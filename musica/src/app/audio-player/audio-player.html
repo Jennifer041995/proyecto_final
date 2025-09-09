@@ -30,9 +30,12 @@
       max="100" 
       min="0"
       step="0.1"
-      [value]="progress"
+      [value]="progress + '%'"
       (input)="seek($event)"> 
     <span>{{ formatTime(duration) }}</span>
+  </div>
+  <div class="current-bar">
+    {{formatTime(currentTime)}} / {{formatTime(duration)}}
   </div>
 
   <div class="volume-control">
@@ -60,20 +63,6 @@
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
-
-// Nueva sección para búsqueda de YouTube
-<div class="youtube-search">
-  <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar en YouTube..." />
-  <button (click)="searchYouTube()">🔍 Buscar</button>
-</div>
-<div class="youtube-results" *ngIf="youtubeResults.length > 0">
-  <h4>Resultados de YouTube</h4>
-  <ul>
-    <li *ngFor="let video of youtubeResults">
-      <a [href]="video.url" target="_blank">{{ video.title }}</a>
-    </li>
-  </ul>
-</div>
 
 <youtube-player
   videoId="TfiYWaeAcRw"
