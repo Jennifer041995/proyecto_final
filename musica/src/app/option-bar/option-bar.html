@@ -1,0 +1,6 @@
+<nav class="option-bar">
+  <button (click)="select('player')" [class.active]="selected === 'player'">🎵 Reproductor</button>
+  <button (click)="select('library')" [class.active]="selected === 'library'">📁 Biblioteca</button>
+  <button (click)="select('videos')" [class.active]="selected === 'videos'">🎬 Videos</button>
+  <button (click)="select('settings')" [class.active]="selected === 'settings'">❤️ Favoritos</button>
+</nav>

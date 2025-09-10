@@ -1,8 +1,13 @@
-<br><main>
-  <h1 [align]="'center'">Productor de Música</h1>
-</main>
-
 <router-outlet></router-outlet>
+
+<main>
+  <h1 [align]="'left'">
+    <img src="https://w7.pngwing.com/pngs/44/38/png-transparent-gold-colored-musical-note-illustration-musical-note-clef-music-notes-miscellaneous-metal-music-download-thumbnail.png" alt="Logo" width="80" height="100">
+    Productor de Música
+    </h1>
+
+    <app-option-bar (optionSelected)="handleOption($event)"></app-option-bar>
+</main>
 
 <style>
   .video-container {
@@ -44,7 +49,9 @@
     background-color: #0056b3;
   }
 </style>
+
 <div class="audio-player">
   <app-audio-player></app-audio-player>
 </div>
+
 

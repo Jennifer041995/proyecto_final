@@ -6,6 +6,7 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+
 @Component({
   selector: 'app-audio-player',
   standalone: true,
@@ -23,6 +24,11 @@ export class AudioPlayerComponent implements OnInit{
  // duration: number = 0; //duración total en segundos
   interval: any;
 
+  handleOption(option: string): void {
+  console.log('Opción seleccionada:', option);
+  // Aquí puedes mostrar u ocultar secciones según la opción
+}
+
   songs: any[] = [
     { 
       image: 'assets/imagenes/mandisa.jpg',
@@ -37,7 +43,7 @@ export class AudioPlayerComponent implements OnInit{
       url: 'assets/ingles/FrancescaBattistelliHeKnowsMyName.mp3' 
     },
     { 
-      image: 'assets/imagenes/Francesca.jpg',
+      image: 'assets/imagenes/mandisa.jpg',
       title: 'Overcomer', 
       artist: 'Mandisa', 
       url: 'assets/ingles/Mandisa-Overcomer.mp3' 
@@ -181,5 +187,3 @@ export class AudioPlayerComponent implements OnInit{
   imports: [YouTubePlayerModule]
 })
 export class AppModule {}
-
-
