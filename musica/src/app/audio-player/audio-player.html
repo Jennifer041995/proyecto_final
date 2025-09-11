@@ -2,12 +2,6 @@
   <div class="song-info">
 </div>
 
-<div class="file-upload" [align]="'right'">
-  <label class="upload-btn">
-    <input type="file" (change)="loadLocalFile($event)" accept=".mp3" />
-  </label>
-</div> <br><br>
-
 <div class="current-song">
   <img [src]="currentSong.image" alt="Portada de {{ currentSong.title }}" class="cover" />
   <h2>{{ currentSong.title }}</h2>

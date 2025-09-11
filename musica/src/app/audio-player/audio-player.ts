@@ -24,11 +24,6 @@ export class AudioPlayerComponent implements OnInit{
  // duration: number = 0; //duración total en segundos
   interval: any;
 
-  handleOption(option: string): void {
-  console.log('Opción seleccionada:', option);
-  // Aquí puedes mostrar u ocultar secciones según la opción
-}
-
   songs: any[] = [
     { 
       image: 'assets/imagenes/mandisa.jpg',

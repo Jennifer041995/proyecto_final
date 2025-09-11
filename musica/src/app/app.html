@@ -6,52 +6,68 @@
     Productor de Música
     </h1>
 
-    <app-option-bar (optionSelected)="handleOption($event)"></app-option-bar>
+  <!-- Contenedor flex para sidebar y contenido -->
+  <div class="main-layout">
+    <!-- Sidebar con option-bar component -->
+    <div class="sidebar">
+      <app-option-bar (optionSelected)="handleOption($event)"></app-option-bar>
+    </div>
+
+    <!-- Área de contenido dinámico -->
+    <div class="content-area">
+      
+      <app-audio-player *ngIf="currentView === 'player'"></app-audio-player>
+
+      <app-select-file *ngIf="currentView === 'selectfile'"></app-select-file>
+      
+      <app-library *ngIf="currentView === 'library'"></app-library>
+      
+      <app-videos *ngIf="currentView === 'videos'"></app-videos>
+
+      <app-favorites *ngIf="currentView === 'favorites'"></app-favorites>
+
+    </div>
+  </div>
 </main>
 
 <style>
-  .video-container {
-    position: relative;
-    max-width: 100%;
-    margin: 1rem auto;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #080808;
+  /* Layout principal - sidebar + contenido */
+  .main-layout {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
   }
-  video {
-    width: 100%;
-    display: block;
+
+  /* Sidebar */
+  .sidebar {
+    width: 250px;
+    flex-shrink: 0;
   }
-  .info {
-    padding: 0.5rem;
-    background-color: #f9f9f9;
+
+  /* Área de contenido principal */
+  .content-area {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Placeholders */
+  .view-placeholder {
+    padding: 40px;
     text-align: center;
-  }
-  h3 {
-    margin: 0.5rem 0 0.2rem 0;
-  }
-  p {
-    margin: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
     color: #666;
   }
-  button {
-    margin-top: 0.5rem;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: white;
-  }
-  button:hover {
-    background-color: #0056b3;
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .main-layout {
+      flex-direction: column;
+    }
+    
+    .sidebar {
+      width: 100%;
+    }
   }
 </style>
-
-<div class="audio-player">
-  <app-audio-player></app-audio-player>
-</div>
-
 
