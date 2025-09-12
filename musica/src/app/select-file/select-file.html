@@ -1,41 +1,35 @@
-<div>
-    <h1 align="center">Seleccionador de archivo</h1>
+<div class="file-upload" style="text-align: center;">
+  <label class="upload-btn">
+    <input type="file" multiple (change)="onFilesSelected($event)" accept=".mp3" />
+  </label>
 </div>
 
-<div class="file-upload" [align]="'center'">
-  <label class="upload-btn">
-  <input type="file" (change)="loadLocalFile($event)" accept=".mp3" />
-</label>
-</div>
+<audio #audioPlayer></audio>
 
 <div class="controls">
-    <button (click)="previous()">⏮ Anterior</button>
-    <button (click)="playPause()">
-      {{ isPlaying ? '⏸ Pausa' : '▶ Reproducir' }}
-    </button>
-    <button (click)="next()">Siguiente ⏭</button>
-  </div>
+  <button (click)="previous()">⏮ Anterior</button>
+  <button (click)="playPause()">
+    {{ isPlaying ? '⏸ Pausa' : '▶ Reproducir' }}
+  </button>
+  <button (click)="next()">Siguiente ⏭</button>
+</div>
 
-  <div class="progress-container">
-    <span>{{ formatTime(currentTime) }}</span>
-    <input
-      type="range"
-      class="progress-slider"
-      max="100" 
-      min="0"
-      step="0.1"
-      [value]="progress"
-      (input)="seek($event)"> 
-    <span>{{ formatTime(duration) }}</span>
-  </div>
+<div class="volume-control">
+  <label>Volumen:</label>
+  <input
+    type="range"
+    max="1"
+    min="0"
+    step="0.1"
+    [value]="volume"
+    (input)="setVolume($event)" />
+</div>
 
-  <div class="volume-control">
-    <label>Volumen:</label>
-    <input
-      type="range"
-      max="1"
-      min="0"
-      step="0.1"
-      [value]="volume"
-      (input)="setVolume($event)">
-  </div>
+<div class="song-list">
+  <h3>Lista de canciones:</h3>
+  <ul>
+    <li *ngFor="let song of songs; let i = index" (click)="playSong(i)">
+      {{ song.title }}
+    </li>
+  </ul>
+</div>

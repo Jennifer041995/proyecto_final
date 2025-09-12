@@ -1,51 +1,75 @@
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-select-file',
-  imports: [CommonModule, FormsModule],
   standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './select-file.html',
-  styleUrl: './select-file.css'
+  styleUrls: ['./select-file.css']
 })
 export class SelectFile {
-  [x: string]: any;
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
 
-  handleOption(option: string): void {
-    console.log('Opción seleccionada:', option);
-  }
+  songs: { title: string; url: string }[] = [];
+  currentSongIndex = 0;
+  isPlaying = false;
+  volume = 1;
 
-  loadLocalFile(event: Event): void {
+  onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      console.log('Archivo seleccionado:', file.name);
-      // Aquí puedes agregar lógica para reproducir, validar o almacenar el archivo
+    const files = input.files;
+
+    if (!files || files.length === 0) return;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const url = URL.createObjectURL(file);
+      this.songs.push({ title: file.name, url });
+    }
+
+    // Si no hay reproducción activa, inicia con la primera
+    if (!this.isPlaying && this.songs.length > 0) {
+      this.playSong(this.currentSongIndex);
+    }
+  }
+
+  playSong(index: number): void {
+    this.currentSongIndex = index;
+    const song = this.songs[index];
+    const audio = this.audioPlayer.nativeElement;
+    audio.src = song.url;
+    audio.load();
+    audio.play();
+    this.isPlaying = true;
+  }
+
+  playPause(): void {
+    const audio = this.audioPlayer.nativeElement;
+    if (this.isPlaying) {
+      audio.pause();
     } else {
-      console.warn('No se seleccionó ningún archivo');
+      audio.play();
+    }
+    this.isPlaying = !this.isPlaying;
+  }
+
+  next(): void {
+    if (this.currentSongIndex < this.songs.length - 1) {
+      this.playSong(this.currentSongIndex + 1);
     }
   }
 
-  loadLocalFile(event: any): void {
-    const file = event.target.files[0];
-    if (file && this.audio) {
-      const objectUrl = URL.createObjectURL(file);
-      this.audio.src = objectUrl;
-      this.audio.load();
-      this.audio.play();
-      this.isPlaying = true;
-
-      this.songs.push({
-        imagen: "",
-        title: file.name,
-       artist: 'Local',
-       url: objectUrl
-      });
-      this.currentSongIndex = this.songs.length - 1;
+  previous(): void {
+    if (this.currentSongIndex > 0) {
+      this.playSong(this.currentSongIndex - 1);
     }
   }
 
+  setVolume(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.volume = parseFloat(input.value);
+    this.audioPlayer.nativeElement.volume = this.volume;
+  }
 }
-
-

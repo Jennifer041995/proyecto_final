@@ -8,13 +8,11 @@ import { Favorites } from './favorites/favorites';
 import { Videos } from './videos/videos';
 import { SelectFile } from './select-file/select-file';
 
-
-
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, AudioPlayerComponent, OptionBar, 
-    CommonModule, Library, SelectFile, Videos, Favorites],
+            CommonModule, Library, SelectFile, Videos, Favorites],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
