@@ -1,3 +1,12 @@
-<div>
-    <h1>Libreria</h1>
+<div class="playlist" align="center">
+  <h4>Biblioteca de canciones</h4>
+  <ul>
+    <li
+      *ngFor="let song of songs; let i = index"
+      (click)="changeSong(i)"
+      [class.active]="i === currentSongIndex">
+      {{ song.title }} - {{ song.artist }}
+    </li>
+  </ul>
 </div>
+

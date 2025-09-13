@@ -177,8 +177,3 @@ export class AudioPlayerComponent implements OnInit{
 
 }
 
-// Módulo de declaración que incluye YoutubePlayerModule
-@NgModule({
-  imports: [YouTubePlayerModule]
-})
-export class AppModule {}
