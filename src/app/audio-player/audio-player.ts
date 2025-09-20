@@ -5,16 +5,25 @@ import { isPlatformBrowser } from '@angular/common';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faStepBackward, faPlay, faPause, faStepForward, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
   selector: 'app-audio-player',
   standalone: true,
-  imports: [CommonModule, FormsModule, YouTubePlayerModule],
+  imports: [CommonModule, FormsModule, YouTubePlayerModule, FontAwesomeModule],
   templateUrl: './audio-player.html',
   styleUrls: ['./audio-player.css']
 })
 export class AudioPlayerComponent implements OnInit{
+  // Iconos de Font Awesome
+  faStepBackward = faStepBackward;
+  faPlay = faPlay;
+  faPause = faPause;
+  faStepForward = faStepForward;
+  faVolumeHigh = faVolumeHigh;
+
   audio: HTMLAudioElement | null = null;
   currentSongIndex: number = 0;
   isPlaying: boolean = false;

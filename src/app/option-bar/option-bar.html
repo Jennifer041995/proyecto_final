@@ -1,0 +1,90 @@
+<!-- <nav class="option-bar">
+  <button (click)="select('player')" [class.active]="selected === 'player'">🪩 Inicio</button>
+  <button (click)="select('selectfile')" [class.active]="selected === 'selectfile'">🎵 Seleccionar archivo</button>
+  <button (click)="select('library')" [class.active]="selected === 'library'">📁 Biblioteca</button>
+  <button (click)="select('videos')" [class.active]="selected === 'videos'">🎬 Videos</button>
+  <button (click)="select('favorites')" [class.active]="selected === 'favorites'">❤️ Favoritos</button>
+</nav> -->
+
+<aside class="sidebar" [class.collapsed]="isCollapsed" [class.menu-active]="isMenuActive">
+  <header class="sidebar-header">
+    <a href="#" class="header-logo">
+      <img src="https://w7.pngwing.com/pngs/44/38/png-transparent-gold-colored-musical-note-illustration-musical-note-clef-music-notes-miscellaneous-metal-music-download-thumbnail.png" alt="CodingNepal">
+    </a>
+    <button class="toggler sidebar-toggler" (click)="toggleSidebar()">
+      <fa-icon [icon]="faChevronLeft"></fa-icon>
+    </button>
+    <button class="toggler menu-toggler" (click)="toggleMenu()">
+      <fa-icon [icon]="isMenuActive ? faXmark : faBars"></fa-icon>
+    </button>
+  </header>
+  <nav class="sidebar-nav">
+    <ul class="nav-list primary-nav">
+      <li class="nav-item">
+        <a href="#" class="nav-link" (click)="select('player')" [class.active]="selected === 'player'">
+          <fa-icon [icon]="faGaugeHigh" class="nav-icon"></fa-icon>
+          <span class="nav-label">Inicio</span>
+        </a>
+        <span class="nav-tooltip">Inicio</span>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" (click)="select('selectfile')" [class.active]="selected === 'selectfile'">
+          <fa-icon [icon]="faCalendar" class="nav-icon"></fa-icon>
+          <span class="nav-label">Seleccionar archivo</span>
+        </a>
+        <span class="nav-tooltip">Seleccionar archivo</span>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" (click)="select('library')" [class.active]="selected === 'library'">
+          <fa-icon [icon]="faBell" class="nav-icon"></fa-icon>
+          <span class="nav-label">Biblioteca</span>
+        </a>
+        <span class="nav-tooltip">Biblioteca</span>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" (click)="select('videos')" [class.active]="selected === 'videos'">
+          <fa-icon [icon]="faUsers" class="nav-icon"></fa-icon>
+          <span class="nav-label">Videos</span>
+        </a>
+        <span class="nav-tooltip">Videos</span>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" (click)="select('favorites')" [class.active]="selected === 'favorites'">
+          <fa-icon [icon]="faChartSimple" class="nav-icon"></fa-icon>
+          <span class="nav-label">Favoritos</span>
+        </a>
+        <span class="nav-tooltip">Favoritos</span>
+      </li>
+      <!-- <li class="nav-item">
+        <a href="#" class="nav-link" (click)="select('bookmarks')">
+          <fa-icon [icon]="faBookmark" class="nav-icon"></fa-icon>
+          <span class="nav-label">Bookmarks</span>
+        </a>
+        <span class="nav-tooltip">Bookmarks</span>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" (click)="select('settings')">
+          <fa-icon [icon]="faGear" class="nav-icon"></fa-icon>
+          <span class="nav-label">Settings</span>
+        </a>
+        <span class="nav-tooltip">Settings</span>
+      </li> -->
+    </ul>
+    <!-- <ul class="nav-list secondary-nav">
+      <li class="nav-item">
+        <a href="#" class="nav-link" (click)="select('profile')">
+          <fa-icon [icon]="faUser" class="nav-icon"></fa-icon>
+          <span class="nav-label">Profile</span>
+        </a>
+        <span class="nav-tooltip">Profile</span>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" (click)="select('logout')">
+          <fa-icon [icon]="faRightFromBracket" class="nav-icon"></fa-icon>
+          <span class="nav-label">Logout</span>
+        </a>
+        <span class="nav-tooltip">Logout</span>
+      </li>
+    </ul> -->
+  </nav>
+</aside>
