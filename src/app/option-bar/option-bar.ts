@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, HostBinding, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChevronLeft, faBars, faXmark, faGaugeHigh, faCalendar, faBell, faUsers, faChartSimple, faBookmark, faGear, faUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faBars, faXmark, faHome, faFolderOpen, faMusic, faPlay, faHeart, faBookmark, faGear, faUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-option-bar',
@@ -15,18 +15,18 @@ export class OptionBar {
   faChevronLeft = faChevronLeft;
   faBars = faBars;
   faXmark = faXmark;
-  faGaugeHigh = faGaugeHigh;
-  faCalendar = faCalendar;
-  faBell = faBell;
-  faUsers = faUsers;
-  faChartSimple = faChartSimple;
+  faHome = faHome;
+  faFolderOpen = faFolderOpen;
+  faMusic = faMusic;
+  faPlay = faPlay;
+  faHeart = faHeart;
   faBookmark = faBookmark;
   faGear = faGear;
   faUser = faUser;
   faRightFromBracket = faRightFromBracket;
 
   // Estado para controlar la clase 'collapsed' del sidebar
-  isCollapsed: boolean = false;
+  isCollapsed: boolean = this.getSidebarState();
   // Estado para controlar la clase 'menu-active'
   isMenuActive: boolean = false;
 
@@ -50,15 +50,18 @@ export class OptionBar {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     if (event.target.innerWidth >= 1024) {
-      // Si la pantalla es grande, el menú no está activo y no está colapsado
+      // Si la pantalla es grande, el menú no está activo
       this.isMenuActive = false;
-      this.isCollapsed = false;
+      // Restaurar el estado guardado del sidebar (no forzar a extendido)
+      this.isCollapsed = this.getSidebarState();
     }
   }
 
   // Método para manejar la lógica de colapsar/expandir el sidebar
   toggleSidebar(): void {
     this.isCollapsed = !this.isCollapsed;
+    // Guardar el estado en localStorage
+    this.saveSidebarState(this.isCollapsed);
     // Si el sidebar se colapsa, asegúrate de que el menú no esté activo
     if (this.isCollapsed) {
       this.isMenuActive = false;
@@ -84,6 +87,37 @@ export class OptionBar {
     // Opcional: Cerrar el menú después de seleccionar una opción en móvil
     if (this.isMenuActive) {
       this.isMenuActive = false;
+    }
+  }
+
+  // Método para manejar el click en la imagen del logo en móvil
+  toggleMenuOnMobile(event: Event): void {
+    event.preventDefault();
+    // Solo activar en dispositivos móviles (pantallas menores a 768px)
+    if (window.innerWidth < 768) {
+      this.isMenuActive = !this.isMenuActive;
+      // Asegurar que el sidebar no se extienda, solo se muestre plegado
+      this.isCollapsed = true;
+    }
+  }
+
+  // Métodos para persistencia del estado del sidebar
+  private getSidebarState(): boolean {
+    // Verificar si estamos en el navegador
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const savedState = localStorage.getItem('sidebarCollapsed');
+      if (savedState !== null) {
+        return JSON.parse(savedState);
+      }
+    }
+    // Estado por defecto: extendido (false)
+    return false;
+  }
+
+  private saveSidebarState(collapsed: boolean): void {
+    // Verificar si estamos en el navegador
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
     }
   }
 }

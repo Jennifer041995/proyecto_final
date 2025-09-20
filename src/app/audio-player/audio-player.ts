@@ -6,7 +6,10 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faStepBackward, faPlay, faPause, faStepForward, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { faStepBackward, faPlay, faPause, faStepForward, faVolumeHigh, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
+import { FavoritesService } from '../services/favorites.service';
+import { PlayerService } from '../services/player.service';
 
 
 @Component({
@@ -23,6 +26,8 @@ export class AudioPlayerComponent implements OnInit{
   faPause = faPause;
   faStepForward = faStepForward;
   faVolumeHigh = faVolumeHigh;
+  faHeartSolid = faHeart;
+  faHeartRegular = faHeartRegular;
 
   audio: HTMLAudioElement | null = null;
   currentSongIndex: number = 0;
@@ -38,19 +43,22 @@ export class AudioPlayerComponent implements OnInit{
       image: 'assets/imagenes/mandisa.jpg',
       title: 'BleedTheSame', 
       artist: 'Mandisa ft. TobyMac, Kirk Franklin', 
-      url: 'assets/ingles/MandisaBleedTheSameftTobyMacKirkFranklin.mp3'
+      url: 'assets/ingles/MandisaBleedTheSameftTobyMacKirkFranklin.mp3',
+      isFavorite: false
     },
     { 
       image: 'assets/imagenes/Francesca.jpg',
       title: 'HeKnowsMyName', 
       artist: 'Francesca Battistelli', 
-      url: 'assets/ingles/FrancescaBattistelliHeKnowsMyName.mp3' 
+      url: 'assets/ingles/FrancescaBattistelliHeKnowsMyName.mp3',
+      isFavorite: false
     },
     { 
       image: 'assets/imagenes/mandisa.jpg',
       title: 'Overcomer', 
       artist: 'Mandisa', 
-      url: 'assets/ingles/Mandisa-Overcomer.mp3' 
+      url: 'assets/ingles/Mandisa-Overcomer.mp3',
+      isFavorite: false
     },
   ];
 
@@ -66,21 +74,27 @@ export class AudioPlayerComponent implements OnInit{
     this.isPlaying = true;
 
     this.songs.push({
-      imagen: "",
+      image: "",
       title: file.name,
       artist: 'Local',
-      url: objectUrl
+      url: objectUrl,
+      isFavorite: false
     });
     this.currentSongIndex = this.songs.length - 1;
   }
 }
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private favoritesService: FavoritesService,
+    private playerService: PlayerService
+  ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.audio = new Audio();
-      this.setupAudio();
+      this.loadFavorites();
+      this.updateFavoritesService();
+      this.playerService.setSongs(this.songs);
     }
   }
 
@@ -124,17 +138,9 @@ export class AudioPlayerComponent implements OnInit{
   }
 
   changeSong(index: number): void {
-    if (!this.audio) return;
-    
-    this.currentSongIndex = index;
-    this.audio.src = this.songs[index].url;
-    this.audio.load();
-    if (this.isPlaying) {
-      this.audio.play().catch(error => {
-        console.error('Error al reproducir:', error);
-      });
+    if (index >= 0 && index < this.songs.length) {
+      this.playerService.playSong(this.songs[index], index);
     }
-    this.progress = 0;
   }
 
   seek(event: any): void {
@@ -183,6 +189,53 @@ export class AudioPlayerComponent implements OnInit{
     return isPlatformBrowser(this.platformId) && window.innerWidth < 768;
   }
 
+  // Métodos para manejar favoritos
+  toggleFavorite(index: number, event: Event): void {
+    event.stopPropagation(); // Evitar que se active el click en la canción
+    
+    if (index >= 0 && index < this.songs.length) {
+      this.songs[index].isFavorite = !this.songs[index].isFavorite;
+      this.favoritesService.toggleFavorite(this.songs[index]);
+      this.updateFavoritesService();
+    }
+  }
+
+  getFavoriteSongs(): any[] {
+    return this.songs.filter(song => song.isFavorite);
+  }
+
+  private saveFavorites(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const favorites = this.songs.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        url: song.url,
+        image: song.image,
+        isFavorite: song.isFavorite
+      }));
+      localStorage.setItem('favoriteSongs', JSON.stringify(favorites));
+    }
+  }
+
+  private loadFavorites(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const savedFavorites = localStorage.getItem('favoriteSongs');
+      if (savedFavorites) {
+        const favorites = JSON.parse(savedFavorites);
+        // Actualizar el estado de favoritos en las canciones actuales
+        this.songs.forEach(song => {
+          const savedSong = favorites.find((fav: any) => fav.title === song.title && fav.artist === song.artist);
+          if (savedSong) {
+            song.isFavorite = savedSong.isFavorite;
+          }
+        });
+      }
+    }
+  }
+
+  private updateFavoritesService(): void {
+    this.favoritesService.updateSongsList(this.songs);
+  }
 
 }
 

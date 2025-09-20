@@ -36,6 +36,7 @@
     "@angular/youtube-player": "^20.2.2",
     "@fortawesome/angular-fontawesome": "^3.0.0",
     "@fortawesome/fontawesome-svg-core": "^7.0.1",
+    "@fortawesome/free-regular-svg-icons": "^7.0.1",
     "@fortawesome/free-solid-svg-icons": "^7.0.1",
     "bootstrap": "^5.3.8",
     "express": "^5.1.0",

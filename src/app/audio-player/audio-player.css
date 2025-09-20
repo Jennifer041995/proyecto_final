@@ -118,7 +118,7 @@
 /* Contenedor para la playlist con scroll */
 .playlist-container {
   padding: 20px;
-  max-height: calc(100vh - 450px);
+  /* max-height: calc(100vh - 450px); */
   overflow-y: auto;
 }
 
@@ -183,6 +183,114 @@
 
 .playlist-container::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
+}
+
+/* Estilos para el botón de favorito */
+.song-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  width: 100%;
+  gap: 12px;
+}
+
+.song-cover {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.song-item:hover .cover-image {
+  transform: scale(1.05);
+}
+
+.song-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+
+.song-title {
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.song-artist {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+}
+
+.favorite-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ff6b6b;
+  transform: scale(1.1);
+}
+
+.favorite-btn.favorited {
+  color: #ff6b6b;
+}
+
+.favorite-btn.favorited:hover {
+  color: #ff5252;
+  transform: scale(1.2);
+}
+
+/* Responsive para móvil */
+@media (max-width: 768px) {
+  .song-item {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  
+  .song-cover {
+    width: 45px;
+    height: 45px;
+    border-radius: 6px;
+  }
+  
+  .song-title {
+    font-size: 0.95rem;
+  }
+  
+  .song-artist {
+    font-size: 0.85rem;
+  }
+  
+  .favorite-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
 }
 
 

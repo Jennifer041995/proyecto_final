@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AudioPlayerComponent } from "./audio-player/audio-player";
 import { OptionBar } from "./option-bar/option-bar";
@@ -8,7 +8,9 @@ import { Favorites } from './favorites/favorites';
 import { Videos } from './videos/videos';
 import { SelectFile } from './select-file/select-file';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faStepBackward, faPlay, faPause, faStepForward, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { faStepBackward, faPlay, faPause, faStepForward, faVolumeHigh, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { PlayerService } from './services/player.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -18,143 +20,139 @@ import { faStepBackward, faPlay, faPause, faStepForward, faVolumeHigh } from '@f
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   // Iconos de Font Awesome
   faStepBackward = faStepBackward;
   faPlay = faPlay;
   faPause = faPause;
   faStepForward = faStepForward;
   faVolumeHigh = faVolumeHigh;
+  faChevronDown = faChevronDown;
 
   currentView: string = 'player';
   title = 'musica';
   // Propiedad para controlar el estado del sidebar en el componente padre
-  isSidebarCollapsed: boolean = false;
+  isSidebarCollapsed: boolean = this.getSidebarState();
   // Propiedad para controlar la clase "extend" en content-area
-  isSidebarExtended: boolean = true; // Inicialmente extendido
+  isSidebarExtended: boolean = !this.getSidebarState(); // Basado en el estado real del sidebar
+  // Propiedad para controlar la expansión del reproductor en móvil
+  isPlayerExpanded: boolean = false;
 
   // Propiedades del reproductor de audio
-  audio: HTMLAudioElement | null = null;
-  currentSongIndex: number = 0;
+  currentSong: any = null;
   isPlaying: boolean = false;
   progress: number = 0;
   volume: number = 1;
+  currentSongIndex: number = 0;
+
+  private subscription: Subscription = new Subscription();
 
   songs: any[] = [
     { 
       image: 'assets/imagenes/mandisa.jpg',
       title: 'BleedTheSame', 
       artist: 'Mandisa ft. TobyMac, Kirk Franklin', 
-      url: 'assets/ingles/MandisaBleedTheSameftTobyMacKirkFranklin.mp3'
+      url: 'assets/ingles/MandisaBleedTheSameftTobyMacKirkFranklin.mp3',
+      isFavorite: false
     },
     { 
       image: 'assets/imagenes/Francesca.jpg',
       title: 'HeKnowsMyName', 
       artist: 'Francesca Battistelli', 
-      url: 'assets/ingles/FrancescaBattistelliHeKnowsMyName.mp3' 
+      url: 'assets/ingles/FrancescaBattistelliHeKnowsMyName.mp3',
+      isFavorite: false
     },
     { 
       image: 'assets/imagenes/mandisa.jpg',
       title: 'Overcomer', 
       artist: 'Mandisa', 
-      url: 'assets/ingles/Mandisa-Overcomer.mp3' 
+      url: 'assets/ingles/Mandisa-Overcomer.mp3',
+      isFavorite: false
     },
   ];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private playerService: PlayerService
+  ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.audio = new Audio();
-      this.setupAudio();
+      this.playerService.setSongs(this.songs);
+      this.subscribeToPlayerService();
     }
   }
 
-  setupAudio(): void {
-    if (!this.audio) return;
-    
-    this.audio.src = this.songs[this.currentSongIndex].url;
-    this.audio.load();
-    
-    this.audio.addEventListener('timeupdate', () => {
-      if (this.audio) {
-        this.progress = (this.audio.currentTime / this.audio.duration) * 100 || 0;
-        if (this.audio.currentTime === this.audio.duration) {
-          this.next();
-        }
-      }
-    });
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
-  playPause(): void {
-    if (!this.audio) return;
-    
-    if (this.isPlaying) {
-      this.audio.pause();
-    } else {
-      this.audio.play().catch(error => {
-        console.error('Error al reproducir:', error);
-      });
+  private subscribeToPlayerService(): void {
+    this.subscription.add(
+      this.playerService.currentSong$.subscribe(song => {
+        this.currentSong = song;
+      })
+    );
+
+    this.subscription.add(
+      this.playerService.isPlaying$.subscribe(playing => {
+        this.isPlaying = playing;
+      })
+    );
+
+    this.subscription.add(
+      this.playerService.progress$.subscribe(progress => {
+        this.progress = progress;
+      })
+    );
+
+    this.subscription.add(
+      this.playerService.volume$.subscribe(volume => {
+        this.volume = volume;
+      })
+    );
+
+    this.subscription.add(
+      this.playerService.currentSongIndex$.subscribe(index => {
+        this.currentSongIndex = index;
+      })
+    );
+  }
+
+
+  playPause(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
     }
-    this.isPlaying = !this.isPlaying;
+    this.playerService.playPause();
   }
 
   next(): void {
-    this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length;
-    this.changeSong(this.currentSongIndex);
+    this.playerService.next();
   }
 
   previous(): void {
-    this.currentSongIndex = (this.currentSongIndex - 1 + this.songs.length) % this.songs.length;
-    this.changeSong(this.currentSongIndex);
-  }
-
-  changeSong(index: number): void {
-    if (!this.audio) return;
-    
-    this.currentSongIndex = index;
-    this.audio.src = this.songs[index].url;
-    this.audio.load();
-    if (this.isPlaying) {
-      this.audio.play().catch(error => {
-        console.error('Error al reproducir:', error);
-      });
-    }
-    this.progress = 0;
+    this.playerService.previous();
   }
 
   seek(event: any): void {
-    if (!this.audio) return;
-    
-    const seekTime = (event.target.value / 100) * this.audio.duration;
-    this.audio.currentTime = seekTime;
-    this.progress = event.target.value;
+    this.playerService.seek(event.target.value);
   }
 
   setVolume(event: any): void {
-    if (!this.audio) return;
-    
-    this.volume = event.target.value;
-    this.audio.volume = this.volume;
-  }
-
-  get currentSong(): any {
-    return this.songs[this.currentSongIndex];
+    this.playerService.setVolume(event.target.value);
   }
 
   formatTime(seconds: number): string {
-    if (isNaN(seconds)) return '0:00';
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' + sec : sec}`;
+    return this.playerService.formatTime(seconds);
   }
 
   get currentTime(): number {
-    return this.audio ? this.audio.currentTime : 0;
+    return this.playerService.currentTime;
   }
 
   get duration(): number {
-    return this.audio ? this.audio.duration : 0;
+    return this.playerService.duration;
   }
 
   handleOption(selectedOption: string): void {
@@ -165,5 +163,31 @@ export class App implements OnInit {
   toggleSidebar(isExtended: boolean) {
     this.isSidebarCollapsed = !isExtended;
     this.isSidebarExtended = isExtended;
+  }
+
+  // Métodos para manejar la expansión del reproductor en móvil
+  togglePlayerExpansion(event: Event): void {
+    // Solo expandir en dispositivos móviles (pantallas menores a 768px)
+    if (window.innerWidth < 768) {
+      this.isPlayerExpanded = !this.isPlayerExpanded;
+    }
+  }
+
+  collapsePlayer(event: Event): void {
+    event.stopPropagation(); // Evitar que se propague el evento de click
+    this.isPlayerExpanded = false;
+  }
+
+  // Método para obtener el estado del sidebar desde localStorage
+  private getSidebarState(): boolean {
+    // Verificar si estamos en el navegador
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const savedState = localStorage.getItem('sidebarCollapsed');
+      if (savedState !== null) {
+        return JSON.parse(savedState);
+      }
+    }
+    // Estado por defecto: extendido (false)
+    return false;
   }
 }

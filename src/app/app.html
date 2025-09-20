@@ -11,12 +11,6 @@
 
     <!-- Área de contenido dinámico -->
     <div class="content-area" [class.extend]="isSidebarExtended" id="content-view">
-      <div class="d-flex justify-content-between px-5 py-2">
-        <img
-          src="https://w7.pngwing.com/pngs/44/38/png-transparent-gold-colored-musical-note-illustration-musical-note-clef-music-notes-miscellaneous-metal-music-download-thumbnail.png"
-          alt="Logo" width="80" height="80">
-        <h1 class="text-white">Reproductor de multimedia</h1>
-      </div>
       
       <app-audio-player *ngIf="currentView === 'player'"></app-audio-player>
 
@@ -32,44 +26,111 @@
   </div>
 </main>
 
-<!-- Tarjeta del reproductor fija -->
-<div class="card fixed-bottom bg-black text-white">
+<!-- Reproductor compacto (anclado) -->
+<div class="card fixed-bottom bg-black text-white player-card-compact" 
+     *ngIf="!isPlayerExpanded"
+     (click)="togglePlayerExpansion($event)">
+  
   <div class="row g-0">
-    <div class="col-md-4">
+    <div class="col-md-4 col-3">
       <div class="current-song">
         <img [src]="currentSong?.image" alt="Portada de {{ currentSong?.title }}" class="cover" />
       </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8 col-9">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <div>
-            <h3>{{ currentSong?.title }}</h3>
-            <h4>{{ currentSong?.artist }}</h4>
+          <div class="song-info">
+            <h3 class="song-title">{{ currentSong?.title }}</h3>
+            <h4 class="song-artist">{{ currentSong?.artist }}</h4>
           </div>
-          <div class="">
-            <button class="btn btn-primary btn-sm me-4" (click)="previous()">
+          
+          <!-- Controles de escritorio -->
+          <div class="desktop-controls d-none d-md-flex">
+            <button class="btn btn-outline-primary btn-sm me-2" (click)="previous()">
               <fa-icon [icon]="faStepBackward"></fa-icon>
             </button>
-            <button class="btn btn-primary btn-sm me-4" (click)="playPause()">
+            <button class="btn btn-outline-primary btn-sm me-2" (click)="playPause($event)">
               <fa-icon [icon]="isPlaying ? faPause : faPlay"></fa-icon>
             </button>
-            <button class="btn btn-primary btn-sm me-4" (click)="next()">
+            <button class="btn btn-outline-primary btn-sm me-2" (click)="next()">
               <fa-icon [icon]="faStepForward"></fa-icon>
             </button>
           </div>
+
+          <!-- Controles móviles (solo play) -->
+          <div class="mobile-controls d-md-none">
+            <button class="btn btn-primary btn-sm" (click)="playPause($event)">
+              <fa-icon [icon]="isPlaying ? faPause : faPlay"></fa-icon>
+            </button>
+          </div>
   
-          <div class="volume-control d-flex align-items-center">
+          <div class="volume-control d-flex align-items-center d-none d-md-flex">
             <fa-icon [icon]="faVolumeHigh"></fa-icon>
             <input class="ms-2" type="range" max="1" min="0" step="0.1" [value]="volume" (input)="setVolume($event)">
           </div>
         </div>
 
-        <div class="progress-container">
+        <div class="progress-container" (click)="$event.stopPropagation()">
           <span>{{ formatTime(currentTime) }}</span>
-          <input type="range" class="progress-slider" max="100" min="0" step="0.1" [value]="progress" (input)="seek($event)">
+          <input type="range" class="progress-slider" max="100" min="0" step="0.1" [value]="progress" (input)="seek($event)" (click)="$event.stopPropagation()">
           <span>{{ formatTime(duration) }}</span>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reproductor expandido (pantalla completa móvil) -->
+<div class="player-card-expanded" 
+     *ngIf="isPlayerExpanded"
+     (click)="togglePlayerExpansion($event)">
+  
+  <!-- Botón para colapsar -->
+  <button class="btn btn-sm btn-outline-light collapse-btn" 
+          (click)="collapsePlayer($event)">
+    <fa-icon [icon]="faChevronDown"></fa-icon>
+  </button>
+
+  <div class="expanded-content">
+    <!-- Imagen de portada -->
+    <div class="expanded-cover">
+      <img [src]="currentSong?.image" alt="Portada de {{ currentSong?.title }}" class="cover-expanded" />
+    </div>
+    
+    <!-- Información de la canción -->
+    <div class="expanded-song-info">
+      <h2 class="expanded-title">{{ currentSong?.title }}</h2>
+      <h3 class="expanded-artist">{{ currentSong?.artist }}</h3>
+    </div>
+    
+    <!-- Barra de progreso -->
+    <div class="expanded-progress" (click)="$event.stopPropagation()">
+      <div class="progress-container-expanded">
+        <span class="time">{{ formatTime(currentTime) }}</span>
+        <input type="range" class="progress-slider-expanded" max="100" min="0" step="0.1" [value]="progress" (input)="seek($event)" (click)="$event.stopPropagation()">
+        <span class="time">{{ formatTime(duration) }}</span>
+      </div>
+    </div>
+    
+    <!-- Controles de reproducción -->
+    <div class="expanded-controls" (click)="$event.stopPropagation()">
+      <button class="btn btn-primary btn-lg control-btn" (click)="previous()">
+        <fa-icon [icon]="faStepBackward"></fa-icon>
+      </button>
+      <button class="btn btn-primary btn-lg control-btn play-btn" (click)="playPause($event)">
+        <fa-icon [icon]="isPlaying ? faPause : faPlay"></fa-icon>
+      </button>
+      <button class="btn btn-primary btn-lg control-btn" (click)="next()">
+        <fa-icon [icon]="faStepForward"></fa-icon>
+      </button>
+    </div>
+    
+    <!-- Control de volumen -->
+    <div class="expanded-volume" (click)="$event.stopPropagation()">
+      <div class="volume-control-expanded">
+        <fa-icon [icon]="faVolumeHigh" class="volume-icon"></fa-icon>
+        <input type="range" max="1" min="0" step="0.1" [value]="volume" (input)="setVolume($event)" class="volume-slider-expanded" (click)="$event.stopPropagation()">
       </div>
     </div>
   </div>
