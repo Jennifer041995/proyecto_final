@@ -4,8 +4,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlay, faHeart as faHeartSolid, faMusic } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
-import { FavoritesService } from '../services/favorites.service';
-import { PlayerService } from '../services/player.service';
+import { FavoritesService } from '../../core/services/favorites.service';
+import { PlayerService } from '../../core/services/player.service';
 import { Subscription } from 'rxjs';
 
 @Component({

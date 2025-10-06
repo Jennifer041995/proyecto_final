@@ -1,16 +1,17 @@
 import { Component, OnInit, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AudioPlayerComponent } from "./audio-player/audio-player";
-import { OptionBar } from "./option-bar/option-bar";
+import { AudioPlayerComponent } from "./features/audio-player/audio-player";
+import { OptionBar } from "./shared/layout/option-bar/option-bar";
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Library } from './library/library';
-import { Favorites } from './favorites/favorites';
-import { Videos } from './videos/videos';
-import { SelectFile } from './select-file/select-file';
+import { Library } from './features/library/library';
+import { Favorites } from './features/favorites/favorites';
+import { Videos } from './features/videos/videos';
+import { SelectFile } from './features/select-file/select-file';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faStepBackward, faPlay, faPause, faStepForward, faVolumeHigh, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { PlayerService } from './services/player.service';
+import { PlayerService } from './core/services/player.service';
 import { Subscription } from 'rxjs';
+import { Song } from './core/models/song.interface';
 
 @Component({
   selector: 'app-root',
@@ -39,7 +40,7 @@ export class App implements OnInit, OnDestroy {
   isPlayerExpanded: boolean = false;
 
   // Propiedades del reproductor de audio
-  currentSong: any = null;
+  currentSong: Song | null = null;
   isPlaying: boolean = false;
   progress: number = 0;
   volume: number = 1;
@@ -47,7 +48,7 @@ export class App implements OnInit, OnDestroy {
 
   private subscription: Subscription = new Subscription();
 
-  songs: any[] = [
+  songs: Song[] = [
     { 
       image: 'assets/imagenes/mandisa.jpg',
       title: 'BleedTheSame', 

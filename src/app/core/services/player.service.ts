@@ -1,18 +1,19 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Song } from '../models/song.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayerService {
   private audio: HTMLAudioElement | null = null;
-  private currentSongSubject = new BehaviorSubject<any>(null);
+  private currentSongSubject = new BehaviorSubject<Song | null>(null);
   private isPlayingSubject = new BehaviorSubject<boolean>(false);
   private progressSubject = new BehaviorSubject<number>(0);
   private volumeSubject = new BehaviorSubject<number>(1);
   private currentSongIndexSubject = new BehaviorSubject<number>(0);
-  private songsSubject = new BehaviorSubject<any[]>([]);
+  private songsSubject = new BehaviorSubject<Song[]>([]);
 
   // Observables públicos
   public currentSong$ = this.currentSongSubject.asObservable();
@@ -52,11 +53,11 @@ export class PlayerService {
     });
   }
 
-  setSongs(songs: any[]): void {
+  setSongs(songs: Song[]): void {
     this.songsSubject.next(songs);
   }
 
-  playSong(song: any, songIndex?: number): void {
+  playSong(song: Song, songIndex?: number): void {
     if (!this.audio || !song) return;
 
     // Buscar el índice de la canción si no se proporciona
@@ -130,7 +131,7 @@ export class PlayerService {
   }
 
   // Getters para obtener valores actuales
-  get currentSong(): any {
+  get currentSong(): Song | null {
     return this.currentSongSubject.value;
   }
 
@@ -150,7 +151,7 @@ export class PlayerService {
     return this.currentSongIndexSubject.value;
   }
 
-  get songs(): any[] {
+  get songs(): Song[] {
     return this.songsSubject.value;
   }
 
