@@ -1,0 +1,96 @@
+<div class="login-background">
+  <div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+  </div>
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-lg">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <h2 class="card-title mb-2">
+              {{ isLoginMode ? 'Iniciar Sesión' : 'Registrarse' }}
+            </h2>
+            <p class="text-muted">
+              {{ isLoginMode ? 'Ingresa a tu cuenta' : 'Crea una nueva cuenta' }}
+            </p>
+          </div>
+
+          <!-- Mensaje de error -->
+          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa fa-exclamation-circle me-2"></i>
+            {{ errorMessage }}
+            <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+          </div>
+
+          <!-- Formulario -->
+          <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <div class="mb-3">
+              <label for="email" class="form-label">
+                <i class="fa fa-envelope me-2"></i>Correo Electrónico
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                [(ngModel)]="email"
+                placeholder="correo@ejemplo.com"
+                required
+                [disabled]="isLoading"
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="password" class="form-label">
+                <i class="fa fa-lock me-2"></i>Contraseña
+              </label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                [(ngModel)]="password"
+                placeholder="••••••••"
+                required
+                [disabled]="isLoading"
+                autocomplete="current-password"
+                minlength="6"
+              />
+              <small class="form-text text-muted" *ngIf="!isLoginMode">
+                Mínimo 6 caracteres
+              </small>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-100 mb-3"
+              [disabled]="isLoading || !loginForm.valid"
+            >
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              <i *ngIf="!isLoading" [class]="isLoginMode ? 'fa fa-sign-in me-2' : 'fa fa-user-plus me-2'"></i>
+              {{ isLoading ? 'Procesando...' : (isLoginMode ? 'Iniciar Sesión' : 'Registrarse') }}
+            </button>
+          </form>
+
+          <!-- Cambiar entre login y registro -->
+          <div class="text-center">
+            <hr class="my-4" />
+            <p class="mb-0">
+              {{ isLoginMode ? '¿No tienes una cuenta?' : '¿Ya tienes una cuenta?' }}
+              <a href="#" (click)="toggleMode(); $event.preventDefault()" class="text-primary text-decoration-none">
+                {{ isLoginMode ? 'Regístrate aquí' : 'Inicia sesión aquí' }}
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+

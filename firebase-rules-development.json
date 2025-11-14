@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "canciones": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}
+

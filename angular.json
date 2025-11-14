@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "musica": {
+    "music-crud-firebase": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -14,25 +14,24 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "/assets/"
               }
             ],
             "styles": [
-              "src/custom-theme.scss",
               "src/styles.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/font-awesome/css/font-awesome.min.css"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/sweetalert2/dist/sweetalert2.all.min.js"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
@@ -68,10 +67,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "musica:build:production"
+              "buildTarget": "music-crud-firebase:build:production"
             },
             "development": {
-              "buildTarget": "musica:build:development"
+              "buildTarget": "music-crud-firebase:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -82,16 +81,15 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "/assets/"
               }
             ],
             "styles": [
@@ -103,6 +101,6 @@
     }
   },
   "cli": {
-    "analytics": "f676097c-47cb-48e4-956b-0163efd9d2ac"
+    "analytics": false
   }
 }

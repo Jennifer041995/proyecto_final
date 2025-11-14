@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "canciones": {
+      "$cancionId": {
+        ".read": true,
+        ".write": true,
+        ".validate": "newData.hasChildren(['artista', 'genero', 'album', 'anioLanzamiento', 'enlaceSpotify'])",
+        "artista": {
+          ".validate": "newData.isString() && newData.val().length >= 2"
+        },
+        "genero": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "album": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "anioLanzamiento": {
+          ".validate": "newData.isNumber() && newData.val() >= 1900 && newData.val() <= 2100"
+        },
+        "enlaceSpotify": {
+          ".validate": "newData.isString() && newData.val().matches(/^https:\\/\\/open\\.spotify\\.com\\/.*/)"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    }
+  }
+}
+
