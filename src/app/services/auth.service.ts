@@ -39,11 +39,10 @@ export class AuthService {
 
   // Iniciar sesión con email y contraseña
   async login(email: string, password: string): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)) {
-      throw new Error('La autenticación solo está disponible en el navegador');
-    }
-
     try {
+      if (!isPlatformBrowser(this.platformId)) {
+        throw new Error('La autenticación solo está disponible en el navegador');
+      }
       await signInWithEmailAndPassword(this.auth, email, password);
     } catch (error: any) {
       throw this.handleAuthError(error);
@@ -52,11 +51,10 @@ export class AuthService {
 
   // Registrar nuevo usuario
   async register(email: string, password: string): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)) {
-      throw new Error('La autenticación solo está disponible en el navegador');
-    }
-
     try {
+      if (!isPlatformBrowser(this.platformId)) {
+        throw new Error('La autenticación solo está disponible en el navegador');
+      }
       await createUserWithEmailAndPassword(this.auth, email, password);
     } catch (error: any) {
       throw this.handleAuthError(error);

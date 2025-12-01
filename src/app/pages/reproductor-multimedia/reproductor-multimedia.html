@@ -1,0 +1,206 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>
+          <i class="fa fa-play-circle" aria-hidden="true"></i>
+          Reproductor Multimedia
+        </h2>
+        @if (archivos.length > 0) {
+          <button type="button" class="btn btn-danger" (click)="limpiarTodos()">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            Limpiar Todo
+          </button>
+        }
+      </div>
+      <p class="text-muted">
+        Carga archivos de audio o video para reproducirlos con Plyr
+      </p>
+    </div>
+  </div>
+
+  <!-- Área de carga de archivos -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fa fa-upload" aria-hidden="true"></i>
+            Cargar Archivos Multimedia
+          </h5>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="archivoInput" class="form-label">
+                <i class="fa fa-file" aria-hidden="true"></i>
+                Seleccionar Archivo(s)
+              </label>
+              <input 
+                type="file" 
+                class="form-control" 
+                id="archivoInput"
+                accept="audio/*,video/*"
+                multiple
+                (change)="onFileSelected($event)">
+              <small class="form-text text-muted">
+                Puedes seleccionar uno o varios archivos de audio o video
+              </small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="carpetaInput" class="form-label">
+                <i class="fa fa-folder" aria-hidden="true"></i>
+                Seleccionar Carpeta (Múltiples archivos)
+              </label>
+              <input 
+                type="file" 
+                class="form-control d-none" 
+                id="carpetaInput"
+                accept="audio/*,video/*"
+                multiple
+                webkitdirectory
+                directory
+                (change)="onFolderSelected($event)">
+              <button 
+                type="button" 
+                class="btn btn-primary w-100"
+                (click)="abrirSelectorCarpeta()">
+                <i class="fa fa-folder-open" aria-hidden="true"></i>
+                Seleccionar Carpeta
+              </button>
+              <small class="form-text text-muted">
+                Selecciona una carpeta con archivos multimedia
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de archivos cargados -->
+  @if (archivos.length > 0) {
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="fa fa-list" aria-hidden="true"></i>
+              Archivos Cargados ({{ archivos.length }})
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Nombre</th>
+                    <th>Tamaño</th>
+                    <th class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (archivo of archivos; track archivo.id) {
+                    <tr [class.table-active]="archivoActual?.id === archivo.id">
+                      <td>
+                        <i class="fa" [ngClass]="obtenerIconoTipo(archivo.tipo)" aria-hidden="true"></i>
+                        <span class="badge" [ngClass]="archivo.tipo === 'video' ? 'bg-danger' : 'bg-primary'">
+                          {{ archivo.tipo === 'video' ? 'Video' : 'Audio' }}
+                        </span>
+                      </td>
+                      <td>{{ archivo.nombre }}</td>
+                      <td>{{ formatearTamano(archivo.archivo.size) }}</td>
+                      <td class="text-center">
+                        <button 
+                          type="button" 
+                          class="btn btn-sm btn-success me-2"
+                          (click)="reproducirArchivo(archivo)"
+                          [title]="archivoActual?.id === archivo.id ? 'Reproduciendo' : 'Reproducir'">
+                          <i class="fa" [ngClass]="archivoActual?.id === archivo.id ? 'fa-pause' : 'fa-play'" aria-hidden="true"></i>
+                          {{ archivoActual?.id === archivo.id ? 'Reproduciendo' : 'Reproducir' }}
+                        </button>
+                        <button 
+                          type="button" 
+                          class="btn btn-sm btn-danger"
+                          (click)="eliminarArchivo(archivo)"
+                          title="Eliminar">
+                          <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+
+  <!-- Mensaje cuando no hay archivos -->
+  @if (archivos.length === 0) {
+    <div class="row">
+      <div class="col-12">
+        <div class="card text-center py-5">
+          <div class="card-body">
+            <i class="fa fa-music fa-4x text-muted mb-3" aria-hidden="true"></i>
+            <h5 class="text-muted">No hay archivos cargados</h5>
+            <p class="text-muted">
+              Selecciona archivos de audio o video para comenzar a reproducir
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal para reproductor multimedia -->
+  <div class="modal fade" id="reproductorModal" tabindex="-1" aria-labelledby="reproductorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reproductorModalLabel">
+            <i class="fa" [ngClass]="archivoActual ? obtenerIconoTipo(archivoActual.tipo) : 'fa-music'" aria-hidden="true"></i>
+            @if (archivoActual) {
+              {{ archivoActual.nombre }}
+            }
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cerrarModal()"></button>
+        </div>
+        <div class="modal-body">
+          @if (archivoActual) {
+            <div class="mb-3">
+              <p class="mb-1"><strong>Tipo:</strong> {{ archivoActual.tipo === 'video' ? 'Video' : 'Audio' }}</p>
+              <p class="mb-0"><strong>Tamaño:</strong> {{ formatearTamano(archivoActual.archivo.size) }}</p>
+            </div>
+          }
+          @if (modoReproductor === 'video' && archivoActual) {
+            <div class="ratio ratio-16x9">
+              <video 
+                #reproductorVideo
+                class="plyr-player w-100 h-100"
+                controls
+                playsinline>
+              </video>
+            </div>
+          } @else if (modoReproductor === 'audio' && archivoActual) {
+            <div class="audio-player-container">
+              <audio 
+                #reproductorAudio
+                class="plyr-player w-100"
+                controls>
+              </audio>
+            </div>
+          }
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cerrarModal()">
+            <i class="fa fa-times" aria-hidden="true"></i>
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

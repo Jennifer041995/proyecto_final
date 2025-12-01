@@ -29,7 +29,7 @@ export class CancionService {
 
   // Obtener todas las canciones
   getCanciones(): Observable<Cancion[]> {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       onValue(this.cancionesRef, (snapshot: DataSnapshot) => {
         const canciones: Cancion[] = [];
         snapshot.forEach((childSnapshot) => {

@@ -23,3 +23,14 @@
   color: #dc3545 !important;
 }
 
+/* Estilos para Plyr */
+.plyr-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.plyr-player {
+  width: 100%;
+  max-width: 100%;
+}
+

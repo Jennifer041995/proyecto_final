@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CancionService, Cancion } from '../../services/cancion.service';
+import { NotificationService } from '../../services/notification.service';
 import { Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-canciones',
@@ -17,11 +18,15 @@ export class CancionesComponent implements OnInit, OnDestroy {
   cancionForm: FormGroup;
   cancionSeleccionada: Cancion | null = null;
   modoEdicion = false;
+  cancionReproduciendo: Cancion | null = null;
+  urlYoutubeEmbed: SafeResourceUrl | null = null;
   private subscription: Subscription = new Subscription();
 
   constructor(
     private cancionService: CancionService,
     private fb: FormBuilder,
+    private sanitizer: DomSanitizer,
+    private notificationService: NotificationService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.cancionForm = this.fb.group({
@@ -29,7 +34,7 @@ export class CancionesComponent implements OnInit, OnDestroy {
       genero: ['', [Validators.required]],
       album: ['', [Validators.required]],
       anioLanzamiento: ['', [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear())]],
-      enlaceDrive: ['', [Validators.required, Validators.pattern(/^https:\/\/drive\.google\.com\/.*/)]]
+      enlaceDrive: ['', [Validators.required, Validators.pattern(/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+/)]]
     });
   }
 
@@ -44,6 +49,61 @@ export class CancionesComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  obtenerIdYoutube(url: string): string | null {
+    // Formatos soportados:
+    // https://www.youtube.com/watch?v=VIDEO_ID
+    // https://youtube.com/watch?v=VIDEO_ID
+    // https://youtu.be/VIDEO_ID
+    // https://www.youtube.com/embed/VIDEO_ID
+    // https://youtube.com/embed/VIDEO_ID
+    
+    let videoId = null;
+    
+    // Formato: ?v=VIDEO_ID
+    const match1 = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+    if (match1) {
+      videoId = match1[1];
+    }
+    
+    return videoId;
+  }
+
+  obtenerUrlYoutubeEmbed(url: string): SafeResourceUrl | null {
+    const videoId = this.obtenerIdYoutube(url);
+    if (videoId) {
+      const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+      return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+    }
+    return null;
+  }
+
+  abrirReproductor(cancion: Cancion): void {
+    this.cancionReproduciendo = cancion;
+    this.urlYoutubeEmbed = this.obtenerUrlYoutubeEmbed(cancion.enlaceDrive);
+    
+    if (!this.urlYoutubeEmbed) {
+      this.notificationService.error('Error', 'El enlace de YouTube no es válido');
+      return;
+    }
+    
+    // Mostrar el modal
+    this.mostrarModalReproductor();
+  }
+
+  mostrarModalReproductor(): void {
+    const modalElement = document.getElementById('reproductorModal');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+      
+      // Cuando se cierra el modal, limpiar la URL del embed
+      modalElement.addEventListener('hidden.bs.modal', () => {
+        this.cancionReproduciendo = null;
+        this.urlYoutubeEmbed = null;
+      }, { once: true });
+    }
+  }
+
   cargarCanciones(): void {
     const sub = this.cancionService.getCanciones().subscribe({
       next: (canciones) => {
@@ -51,11 +111,7 @@ export class CancionesComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error al cargar canciones:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudieron cargar las canciones'
-        });
+        this.notificationService.error('Error', 'No se pudieron cargar las canciones');
       }
     });
     this.subscription.add(sub);
@@ -107,41 +163,25 @@ export class CancionesComponent implements OnInit, OnDestroy {
         // Actualizar
         this.cancionService.actualizarCancion(this.cancionSeleccionada.id, cancionData)
           .then(() => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Éxito',
-              text: 'Canción actualizada correctamente'
-            });
+            this.notificationService.success('Éxito', 'Canción actualizada correctamente');
             this.cerrarModal();
             this.cancionForm.reset();
           })
           .catch((error) => {
             console.error('Error al actualizar canción:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo actualizar la canción'
-            });
+            this.notificationService.error('Error', 'No se pudo actualizar la canción');
           });
       } else {
         // Crear
         this.cancionService.crearCancion(cancionData)
           .then(() => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Éxito',
-              text: 'Canción creada correctamente'
-            });
+            this.notificationService.success('Éxito', 'Canción creada correctamente');
             this.cerrarModal();
             this.cancionForm.reset();
           })
           .catch((error) => {
             console.error('Error al crear canción:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo crear la canción'
-            });
+            this.notificationService.error('Error', 'No se pudo crear la canción');
           });
       }
     } else {
@@ -154,35 +194,23 @@ export class CancionesComponent implements OnInit, OnDestroy {
 
   eliminarCancion(cancion: Cancion): void {
     if (cancion.id) {
-      Swal.fire({
-        title: '¿Estás seguro?',
-        text: `¿Deseas eliminar la canción de ${cancion.artista}?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.cancionService.eliminarCancion(cancion.id!)
-            .then(() => {
-              Swal.fire({
-                icon: 'success',
-                title: 'Eliminado',
-                text: 'Canción eliminada correctamente'
+      this.notificationService.confirm(
+        '¿Estás seguro?',
+        `¿Deseas eliminar la canción de ${cancion.artista}?`,
+        'Sí, eliminar',
+        'Cancelar'
+      ).then((result) => {
+          if (result.isConfirmed) {
+            this.cancionService.eliminarCancion(cancion.id!)
+              .then(() => {
+                this.notificationService.success('Eliminado', 'Canción eliminada correctamente');
+              })
+              .catch((error) => {
+                console.error('Error al eliminar canción:', error);
+                this.notificationService.error('Error', 'No se pudo eliminar la canción');
               });
-            })
-            .catch((error) => {
-              console.error('Error al eliminar canción:', error);
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo eliminar la canción'
-              });
-            });
-        }
-      });
+          }
+        });
     }
   }
 
@@ -210,7 +238,7 @@ export class CancionesComponent implements OnInit, OnDestroy {
           return `El año máximo es ${control.errors['max'].max}`;
         }
         if (control.errors['pattern']) {
-          return 'Debe ser un enlace válido de Google Drive';
+          return 'Debe ser un enlace válido de YouTube';
         }
       }
       return '';

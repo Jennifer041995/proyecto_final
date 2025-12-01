@@ -1,0 +1,116 @@
+.plyr-player {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px 10px 0 0 !important;
+  border: none;
+}
+
+.card-header h5 {
+  color: white;
+}
+
+.table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(102, 126, 234, 0.1);
+  cursor: pointer;
+}
+
+.table-active {
+  background-color: rgba(102, 126, 234, 0.2) !important;
+}
+
+.badge {
+  padding: 5px 10px;
+  font-size: 0.75rem;
+}
+
+.btn {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-control {
+  border-radius: 6px;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Estilos para el reproductor Plyr */
+:host ::ng-deep .plyr {
+  border-radius: 8px;
+}
+
+:host ::ng-deep .plyr__video-wrapper {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .plyr__poster {
+  border-radius: 8px;
+}
+
+/* Contenedor para reproductor de audio en el modal */
+.audio-player-container {
+  padding: 20px 0;
+}
+
+/* Estilos para el modal */
+.modal-content {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px 10px 0 0;
+  border: none;
+}
+
+.modal-header .modal-title {
+  color: white;
+}
+
+.modal-header .btn-close {
+  filter: invert(1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+

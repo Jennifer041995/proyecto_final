@@ -27,7 +27,7 @@
                 <th>Género</th>
                 <th>Álbum</th>
                 <th>Año</th>
-                <th>Enlace Drive</th>
+                <th>Enlace YouTube</th>
                 <th class="text-center">Acciones</th>
               </tr>
             </thead>
@@ -50,10 +50,14 @@
                     <td>
                       <a [href]="cancion.enlaceDrive" target="_blank" class="btn btn-sm btn-link">
                         <i class="fa fa-external-link" aria-hidden="true"></i>
-                        Ver en Drive
+                        Ver en YouTube
                       </a>
                     </td>
                     <td class="text-center">
+                      <button type="button" class="btn btn-sm btn-success me-2" 
+                              (click)="abrirReproductor(cancion)" title="Reproducir">
+                        <i class="fa fa-play" aria-hidden="true"></i>
+                      </button>
                       <button type="button" class="btn btn-sm btn-warning me-2" 
                               (click)="abrirModalEditar(cancion)" title="Editar">
                         <i class="fa fa-edit" aria-hidden="true"></i>
@@ -132,9 +136,9 @@
           </div>
 
           <div class="mb-3">
-            <label for="enlaceDrive" class="form-label">Enlace de Google Drive <span class="text-danger">*</span></label>
+            <label for="enlaceDrive" class="form-label">Enlace de YouTube <span class="text-danger">*</span></label>
             <input type="url" class="form-control" id="enlaceDrive" formControlName="enlaceDrive" 
-                   placeholder="https://drive.google.com/..." 
+                   placeholder="https://www.youtube.com/watch?v=..." 
                    [class.is-invalid]="campoInvalido('enlaceDrive')">
             @if (campoInvalido('enlaceDrive')) {
               <div class="invalid-feedback">
@@ -142,7 +146,7 @@
               </div>
             }
             <small class="form-text text-muted">
-              Ingresa el enlace completo de Google Drive donde está almacenada la canción
+              Ingresa el enlace completo de YouTube del video (formato: https://www.youtube.com/watch?v=... o https://youtu.be/...)
             </small>
           </div>
         </form>
@@ -156,6 +160,48 @@
                 [disabled]="cancionForm.invalid">
           <i class="fa fa-save" aria-hidden="true"></i>
           <span>{{ modoEdicion ? 'Actualizar' : 'Guardar' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para reproductor multimedia -->
+<div class="modal fade" id="reproductorModal" tabindex="-1" aria-labelledby="reproductorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reproductorModalLabel">
+          <i class="fa fa-music" aria-hidden="true"></i>
+          @if (cancionReproduciendo) {
+            {{ cancionReproduciendo.artista }} - {{ cancionReproduciendo.album }}
+          }
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        @if (cancionReproduciendo) {
+          <div class="mb-3">
+            <p class="mb-1"><strong>Género:</strong> {{ cancionReproduciendo.genero }}</p>
+            <p class="mb-0"><strong>Año:</strong> {{ cancionReproduciendo.anioLanzamiento }}</p>
+          </div>
+        }
+        @if (urlYoutubeEmbed) {
+          <div class="ratio ratio-16x9">
+            <iframe 
+              [src]="urlYoutubeEmbed" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen
+              class="w-100 h-100">
+            </iframe>
+          </div>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fa fa-times" aria-hidden="true"></i>
+          Cerrar
         </button>
       </div>
     </div>

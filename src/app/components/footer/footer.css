@@ -1,0 +1,31 @@
+.footer {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+  margin-top: auto;
+}
+
+.footer p {
+  margin: 0.25rem 0;
+}
+
+.footer .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.footer i {
+  margin-right: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer {
+    text-align: center !important;
+  }
+  
+  .footer .col-md-6 {
+    text-align: center !important;
+    margin-bottom: 1rem;
+  }
+}
+
