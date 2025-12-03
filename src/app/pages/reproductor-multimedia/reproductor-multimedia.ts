@@ -43,10 +43,10 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Destruir instancia de Plyr a través del servicio
+    // Destruye instancia de Plyr a través del servicio
     this.plyrService.destroyInstance();
     
-    // Limpiar URLs de objetos
+    // Limpia URLs de objetos
     this.archivos.forEach(archivo => {
       if (archivo.url) {
         URL.revokeObjectURL(archivo.url);
@@ -65,7 +65,7 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
       const archivosAgregados = this.archivos.length - archivosAntes;
       const archivosIgnorados = files.length - archivosAgregados;
 
-      // Mostrar alerta con el servicio de notificaciones
+      // Muestra la alerta con el servicio de notificaciones
       if (archivosAgregados > 0) {
         this.notificationService.custom({
           icon: 'success',
@@ -90,7 +90,7 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
     if ('showDirectoryPicker' in window) {
       this.seleccionarCarpetaModerno();
     } else {
-      // Fallback: usar input tradicional (mostrará alerta nativa)
+      // Fallback: usa input tradicional (mostrará alerta nativa)
       const input = document.getElementById('carpetaInput') as HTMLInputElement;
       if (input) {
         input.click();
@@ -103,7 +103,7 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
       const directoryHandle = await (window as any).showDirectoryPicker();
       const files: File[] = [];
 
-      // Recorrer recursivamente la carpeta
+      // Recorre recursivamente la carpeta
       await this.obtenerArchivosDeCarpeta(directoryHandle, files);
 
       if (files.length > 0) {
@@ -129,7 +129,7 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
     for await (const entry of directoryHandle.values()) {
       if (entry.kind === 'file') {
         const file = await entry.getFile();
-        // Solo agregar archivos multimedia
+        // Solo agrega archivos multimedia
         if (file.type.startsWith('audio/') || file.type.startsWith('video/')) {
           files.push(file);
         }
@@ -170,12 +170,12 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
       const files = Array.from(input.files);
       const totalArchivos = files.length;
       
-      // Obtener el nombre de la carpeta (del primer archivo)
+      // Obtiene el nombre de la carpeta (del primer archivo)
       const nombreCarpeta = files.length > 0 && files[0].webkitRelativePath 
         ? files[0].webkitRelativePath.split('/')[0] 
         : 'la carpeta';
 
-      // Mostrar confirmación con SweetAlert2 antes de procesar
+      // Muestra la confirmación con SweetAlert2 antes de procesar
       this.mostrarConfirmacionCarpeta(files, nombreCarpeta);
     }
   }
@@ -186,7 +186,7 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
     const archivosAgregados = this.archivos.length - archivosAntes;
     const archivosIgnorados = files.length - archivosAgregados;
 
-    // Mostrar resultado
+    // Muestra resultado
     if (archivosAgregados > 0) {
       this.notificationService.custom({
         icon: 'success',
@@ -203,7 +203,7 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
       this.notificationService.warning('No se encontraron archivos multimedia', 'La carpeta seleccionada no contiene archivos de audio o video válidos.');
     }
 
-    // Resetear el input
+    // Resetea el input
     const input = document.getElementById('carpetaInput') as HTMLInputElement;
     if (input) {
       input.value = '';
@@ -214,7 +214,7 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
     if (!isPlatformBrowser(this.platformId)) return;
 
     files.forEach(file => {
-      // Verificar si es un archivo multimedia
+      // Verifica si es un archivo multimedia
       if (file.type.startsWith('audio/') || file.type.startsWith('video/')) {
         const url = URL.createObjectURL(file);
         const tipo: 'audio' | 'video' = file.type.startsWith('video/') ? 'video' : 'audio';
@@ -239,16 +239,16 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
   reproducirArchivo(archivo: ArchivoMultimedia): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    // Limpiar reproductor anterior a través del servicio
+    // Limpia el reproductor anterior a través del servicio
     this.plyrService.destroyInstance();
 
     this.archivoActual = archivo;
     this.modoReproductor = archivo.tipo;
 
-    // Mostrar el modal
+    // Muestra el modal
     this.mostrarModal();
 
-    // Esperar a que el modal se muestre y el DOM se actualice
+    // Espera a que el modal se muestre y el DOM se actualice
     setTimeout(() => {
       this.inicializarPlyr();
     }, 300);
@@ -268,10 +268,10 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
     if (elemento && this.archivoActual) {
       elemento.src = this.archivoActual.url;
       
-      // Crear instancia de Plyr a través del servicio
+      // Crea instancia de Plyr a través del servicio
       this.plyrService.createInstance(elemento).then((plyrInstance) => {
         if (plyrInstance) {
-          // Cargar el archivo
+          // Carga el archivo
           elemento!.load();
         }
       }).catch((error) => {
@@ -281,14 +281,14 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
   }
 
   eliminarArchivo(archivo: ArchivoMultimedia): void {
-    // Si es el archivo actual, limpiar el reproductor
+    // Si es el archivo actual, limpia el reproductor
     if (this.archivoActual?.id === archivo.id) {
       this.plyrService.destroyInstance();
       this.archivoActual = null;
       this.modoReproductor = null;
     }
 
-    // Revocar URL y eliminar de la lista
+    // Revoca el URL y elimina de la lista
     URL.revokeObjectURL(archivo.url);
     this.archivos = this.archivos.filter(a => a.id !== archivo.id);
   }
@@ -296,7 +296,7 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
   limpiarTodos(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    // Mostrar confirmación con el servicio de notificaciones
+    // Muestra la confirmación con el servicio de notificaciones
     this.notificationService.confirm(
       '¿Estás seguro?',
       `¿Deseas eliminar todos los archivos cargados (${this.archivos.length} archivo${this.archivos.length !== 1 ? 's' : ''})?`,
@@ -304,20 +304,20 @@ export class ReproductorMultimedia implements OnInit, AfterViewInit, OnDestroy {
       'Cancelar'
     ).then((result) => {
       if (result.isConfirmed) {
-        // Limpiar reproductor a través del servicio
+        // Limpia el reproductor a través del servicio
         this.plyrService.destroyInstance();
 
-        // Revocar todas las URLs
+        // Revoca todas las URLs
         this.archivos.forEach(archivo => {
           URL.revokeObjectURL(archivo.url);
         });
 
-        // Limpiar lista
+        // Limpia lista
         this.archivos = [];
         this.archivoActual = null;
         this.modoReproductor = null;
 
-        // Resetear los inputs de archivo para que puedan detectar cambios nuevamente
+        // Resetea los inputs de archivo para que puedan detectar cambios nuevamente
         const archivoInput = document.getElementById('archivoInput') as HTMLInputElement;
         const carpetaInput = document.getElementById('carpetaInput') as HTMLInputElement;
         

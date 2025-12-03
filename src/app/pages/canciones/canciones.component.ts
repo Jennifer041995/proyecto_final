@@ -29,6 +29,8 @@ export class CancionesComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
+    //crear el formulario reactivo que garantiza que los datos ingresados por el usuario 
+    // sean correctos antes de enviarlos al servicio
     this.cancionForm = this.fb.group({
       artista: ['', [Validators.required, Validators.minLength(2)]],
       genero: ['', [Validators.required]],
@@ -39,7 +41,7 @@ export class CancionesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Solo cargar canciones si estamos en el navegador (no durante SSR)
+    // Solo cargar canciones si estamos en el navegador (no durante SSR (Server-Side Rendering- renderizado del lado del servidor))
     if (isPlatformBrowser(this.platformId)) {
       this.cargarCanciones();
     }
@@ -50,12 +52,6 @@ export class CancionesComponent implements OnInit, OnDestroy {
   }
 
   obtenerIdYoutube(url: string): string | null {
-    // Formatos soportados:
-    // https://www.youtube.com/watch?v=VIDEO_ID
-    // https://youtube.com/watch?v=VIDEO_ID
-    // https://youtu.be/VIDEO_ID
-    // https://www.youtube.com/embed/VIDEO_ID
-    // https://youtube.com/embed/VIDEO_ID
     
     let videoId = null;
     

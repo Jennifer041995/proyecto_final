@@ -17,7 +17,7 @@
   margin-right: 5px;
 }
 
-/* Responsive */
+/* Responsivo */
 @media (max-width: 768px) {
   .footer {
     text-align: center !important;
