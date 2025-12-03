@@ -6,9 +6,7 @@ import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 })
 export class NotificationService {
 
-  /**
-   * Muestra una alerta de éxito
-   */
+  //Muestra una alerta de éxito
   success(title: string, text?: string, timer?: number): Promise<SweetAlertResult> {
     return Swal.fire({
       icon: 'success',
@@ -20,9 +18,7 @@ export class NotificationService {
     });
   }
 
-  /**
-   * Muestra una alerta de error
-   */
+   //Muestra una alerta de error
   error(title: string, text?: string): Promise<SweetAlertResult> {
     return Swal.fire({
       icon: 'error',
@@ -32,9 +28,7 @@ export class NotificationService {
     });
   }
 
-  /**
-   * Muestra una alerta de advertencia
-   */
+   //Muestra una alerta de advertencia
   warning(title: string, text?: string): Promise<SweetAlertResult> {
     return Swal.fire({
       icon: 'warning',
@@ -44,9 +38,7 @@ export class NotificationService {
     });
   }
 
-  /**
-   * Muestra una alerta informativa
-   */
+   //Muestra una alerta informativa
   info(title: string, text?: string): Promise<SweetAlertResult> {
     return Swal.fire({
       icon: 'info',
@@ -56,9 +48,7 @@ export class NotificationService {
     });
   }
 
-  /**
-   * Muestra una confirmación
-   */
+   //Muestra una confirmación
   confirm(
     title: string, 
     text?: string, 
@@ -77,9 +67,7 @@ export class NotificationService {
     });
   }
 
-  /**
-   * Muestra una confirmación de eliminación
-   */
+   //Muestra una confirmación de eliminación
   confirmDelete(itemName: string, itemType: string = 'elemento'): Promise<SweetAlertResult> {
     return Swal.fire({
       title: '¿Estás seguro?',
@@ -93,16 +81,12 @@ export class NotificationService {
     });
   }
 
-  /**
-   * Muestra una alerta personalizada
-   */
+  //Muestra una alerta personalizada
   custom(options: SweetAlertOptions): Promise<SweetAlertResult> {
     return Swal.fire(options);
   }
 
-  /**
-   * Muestra una alerta de carga
-   */
+   //Muestra una alerta de carga
   loading(title: string = 'Cargando...'): void {
     Swal.fire({
       title: title,
@@ -114,9 +98,7 @@ export class NotificationService {
     });
   }
 
-  /**
-   * Cierra la alerta actual
-   */
+   //Cierra la alerta actual
   close(): void {
     Swal.close();
   }

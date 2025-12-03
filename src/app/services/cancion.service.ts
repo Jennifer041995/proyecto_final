@@ -20,14 +20,15 @@ export class CancionService {
   private database = getDatabase(app);
   private cancionesRef = ref(this.database, 'canciones');
 
+  //referencia a la colección de canciones de la base de firebase
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    // Asegurar que Firebase solo se use en el cliente
+    // Asegura que el Firebase solo se usa en el cliente
     if (!isPlatformBrowser(this.platformId)) {
       console.warn('CancionService: Firebase solo está disponible en el navegador');
     }
   }
 
-  // Obtener todas las canciones
+  // Obtiene todas las canciones
   getCanciones(): Observable<Cancion[]> {
     return new Observable((observer) => {
       onValue(this.cancionesRef, (snapshot: DataSnapshot) => {
@@ -44,14 +45,14 @@ export class CancionService {
         observer.error(error);
       });
 
-      // Retornar función de limpieza
+      // Retorna la función de limpieza
       return () => {
         off(this.cancionesRef);
       };
     });
   }
 
-  // Crear una nueva canción
+  // Crea una nueva canción
   crearCancion(cancion: Cancion): Promise<void> {
     const nuevaCancionRef = push(this.cancionesRef);
     return set(nuevaCancionRef, {
@@ -63,7 +64,7 @@ export class CancionService {
     });
   }
 
-  // Actualizar una canción
+  // Actualiza una canción
   actualizarCancion(id: string, cancion: Cancion): Promise<void> {
     const cancionRef = ref(this.database, `canciones/${id}`);
     return set(cancionRef, {
@@ -75,7 +76,7 @@ export class CancionService {
     });
   }
 
-  // Eliminar una canción
+  // Elimina una canción
   eliminarCancion(id: string): Promise<void> {
     const cancionRef = ref(this.database, `canciones/${id}`);
     return remove(cancionRef);

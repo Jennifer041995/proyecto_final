@@ -55,7 +55,6 @@ export class CancionesComponent implements OnInit, OnDestroy {
     
     let videoId = null;
     
-    // Formato: ?v=VIDEO_ID
     const match1 = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
     if (match1) {
       videoId = match1[1];
@@ -168,7 +167,7 @@ export class CancionesComponent implements OnInit, OnDestroy {
             this.notificationService.error('Error', 'No se pudo actualizar la canción');
           });
       } else {
-        // Crear
+        // Crea canciones
         this.cancionService.crearCancion(cancionData)
           .then(() => {
             this.notificationService.success('Éxito', 'Canción creada correctamente');
@@ -181,7 +180,7 @@ export class CancionesComponent implements OnInit, OnDestroy {
           });
       }
     } else {
-      // Marcar todos los campos como tocados para mostrar errores
+      // Marca todos los campos como tocados para mostrar errores
       Object.keys(this.cancionForm.controls).forEach(key => {
         this.cancionForm.get(key)?.markAsTouched();
       });

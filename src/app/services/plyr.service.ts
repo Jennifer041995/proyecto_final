@@ -11,9 +11,7 @@ export class PlyrService {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
-  /**
-   * Carga el módulo de Plyr dinámicamente
-   */
+   //Carga el módulo de Plyr dinámicamente
   private async loadPlyr(): Promise<any> {
     if (!isPlatformBrowser(this.platformId)) {
       throw new Error('Plyr solo está disponible en el navegador');
@@ -35,9 +33,7 @@ export class PlyrService {
     }
   }
 
-  /**
-   * Crea una nueva instancia de Plyr con la configuración por defecto
-   */
+   //Crea una nueva instancia de Plyr con la configuración por defecto
   async createInstance(element: HTMLVideoElement | HTMLAudioElement): Promise<any> {
     if (!isPlatformBrowser(this.platformId)) {
       return null;
@@ -60,9 +56,7 @@ export class PlyrService {
     }
   }
 
-  /**
-   * Crea una instancia de Plyr con configuración personalizada
-   */
+  //Crea una instancia de Plyr con configuración personalizada
   async createInstanceWithConfig(
     element: HTMLVideoElement | HTMLAudioElement,
     config?: any
@@ -89,16 +83,12 @@ export class PlyrService {
     }
   }
 
-  /**
-   * Obtiene la instancia actual de Plyr
-   */
+  //Obtiene la instancia actual de Plyr
   getInstance(): any {
     return this.plyrInstance;
   }
 
-  /**
-   * Destruye la instancia actual de Plyr
-   */
+  //Destruye la instancia actual de Plyr
   destroyInstance(): void {
     if (this.plyrInstance) {
       try {
@@ -110,9 +100,7 @@ export class PlyrService {
     }
   }
 
-  /**
-   * Obtiene la configuración por defecto de Plyr
-   */
+  //Obtiene la configuración por defecto de Plyr
   private getDefaultConfig(): any {
     return {
       controls: [
@@ -139,9 +127,7 @@ export class PlyrService {
     };
   }
 
-  /**
-   * Verifica si hay una instancia activa de Plyr
-   */
+  //Verifica si hay una instancia activa de Plyr
   hasInstance(): boolean {
     return this.plyrInstance !== null;
   }

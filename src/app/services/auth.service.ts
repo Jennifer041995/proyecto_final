@@ -37,7 +37,7 @@ export class AuthService {
     });
   }
 
-  // Iniciar sesión con email y contraseña
+  // Inicia sesión con email y contraseña
   async login(email: string, password: string): Promise<void> {
     try {
       if (!isPlatformBrowser(this.platformId)) {
@@ -49,7 +49,7 @@ export class AuthService {
     }
   }
 
-  // Registrar nuevo usuario
+  // Registra un nuevo usuario
   async register(email: string, password: string): Promise<void> {
     try {
       if (!isPlatformBrowser(this.platformId)) {
@@ -61,7 +61,7 @@ export class AuthService {
     }
   }
 
-  // Cerrar sesión
+  // Cierra sesión
   async logout(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) {
       return;
@@ -74,12 +74,12 @@ export class AuthService {
     }
   }
 
-  // Obtener usuario actual
+  // Obtiene usuario actual
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
-  // Verificar si el usuario está autenticado
+  // Verifica si el usuario está autenticado
   isAuthenticated(): boolean {
     return this.currentUserSubject.value !== null;
   }
